@@ -1,0 +1,128 @@
+.bg-red {
+	background: #ff7676 !important;
+	color: #fff;
+}
+/*====== Client Profile Box ======*/
+.client .client-avatar {
+	width: 100px;
+	height: 100px;
+	margin: 0 auto;
+	position: relative;
+}
+
+.client .client-avatar .status {
+	content: '';
+	display: block;
+	width: 18px;
+	height: 18px;
+	border: 3px solid #fff;
+	border-radius: 50%;
+	position: absolute;
+	right: 4px;
+	bottom: 4px;
+}
+
+.client .client-title {
+	margin-top: 20px;
+}
+
+.client .client-title h3 {
+	font-weight: 500;
+	color: #555;
+}
+
+.client .client-title span {
+	font-size: 0.9em;
+	color: #aaa;
+	display: block;
+}
+
+.client .client-title a {
+	padding: 2px 30px;
+	border-radius: 40px;
+	background: #54e69d;
+	color: #fff;
+	margin-top: 5px;
+	font-size: 0.9em;
+	text-decoration: none;
+}
+
+.client .client-title a:hover {
+	background: #85b4f2;
+}
+
+.client .client-info {
+	margin-top: 20px;
+}
+
+.client .client-info strong {
+	font-weight: 700;
+}
+
+.client .client-social {
+	margin-top: 20px;
+}
+
+.client .client-social a {
+	color: #aaa;
+}
+
+/*
+* 8. CARD
+*/
+.card {
+	border: 1px solid #ccc;
+	background: #EEF5F9;
+	margin-bottom: 3rem;
+}
+
+.card>.list-group:first-child .list-group-item:first-child {
+	border-top-left-radius: 0;
+	border-top-right-radius: 0;
+}
+
+.card>.list-group:last-child .list-group-item:last-child {
+	border-bottom-right-radius: 0;
+	border-bottom-left-radius: 0;
+}
+
+.card-body {
+	padding: 1.25rem;
+}
+
+.card-title {
+	margin-bottom: 1rem;
+}
+
+.card-subtitle {
+	margin-top: -0.5rem;
+}
+
+.card-link+.card-link {
+	margin-left: 1.25rem;
+}
+
+.card-header {
+	padding: 1rem 1.25rem;
+	background-color: #fff;
+	border-bottom: 1px solid #eee;
+}
+
+.card-header:first-child {
+	border-radius: 0 0 0 0;
+}
+
+.card-header-transparent {
+	background-color: rgba(0, 0, 0, 0.3);
+	border-bottom: none;
+}
+
+.card-footer {
+	padding: 1rem 1.25rem;
+	background-color: #f8f9fa;
+	border-top: 1px solid #eee;
+}
+
+.card-footer:last-child {
+	border-radius: 0 0 0 0;
+}

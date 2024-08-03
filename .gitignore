@@ -1,0 +1,17 @@
+**/vendor/
+.vscode/
+
+# Loại bỏ các thư mục "upload"
+site/upload/
+
+# Loại bỏ các thư mục "cache"
+**/*cache*/
+**/file_autorun/
+
+# Loại bỏ file cấu hình, kết nối database
+configs/conn.php
+
+# Loại bỏ các trường hợp khác
+*.gz
+*.zip
+*.rar

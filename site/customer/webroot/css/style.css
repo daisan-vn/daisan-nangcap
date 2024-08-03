@@ -1,0 +1,129 @@
+* {
+	outline: none !important
+}
+
+header a{
+color:black !important;}
+
+header a i {color:#24a2de;}
+
+body {
+	font-family: Arial;
+	font-size: 14px;
+	background-color: #F2F3F7;
+	font-size: 14px;
+	overflow-x: hidden;
+}
+.nav-link{
+	color: #fff;
+}
+.nav-link:hover{
+	color: #ccc;
+}
+ul {
+	padding: 0;
+	list-style: none;
+}
+header {
+	background-color: #fff81a;
+	box-shadow: 2px 2px 3px rgba(0, 0, 0, .1);
+}
+header .logo{
+	display: block;
+        width:70%;
+}
+header h2{
+	border-left: 2px solid #ccc;
+	margin-top: 0.5rem;
+	padding-left: 1rem;
+	font-size: 24px;
+	margin-left: 1rem;
+}
+header h2 a{
+	color: #ccc;
+	text-decoration: none;
+}
+header h2 a:hover{
+	color: #FF751A;
+}
+
+.breadcrumb{
+	margin-bottom: 0;
+	border-radius: 0;
+}
+
+#banner{
+	min-height: 275px;
+	background: url(../images/banner-help.png) center no-repeat;
+	color: #fff;
+}
+
+#sidebar ul.left li a{
+    margin-top: -1px;
+    color: #333;
+    display: block;
+    line-height: 42px;
+    border-top: 1px solid #dae2ed;
+    position: relative;
+}
+#sidebar ul.left li a i{
+    line-height: 42px;
+    margin-right: 5px;
+    color: #ccc;
+    font-weight: bold;
+        transform: translate3d(0, 0, 0);
+    transition-duration: 200ms
+}
+#sidebar ul.left li:hover a i{
+        transform: rotate(180deg);
+        color:#FF6A00;
+}
+#sidebar ul.left li:hover ul.sub{
+    display: block;
+}
+#sidebar ul.sub{
+    display: none;
+}
+#sidebar ul.sub li a{
+    padding-left: 20px;
+    font-size: 13px;
+}
+#sidebar h3 {
+    color: #ff7519;
+    font-size: 20px;
+}
+.posts li{
+	line-height: 3em;
+}
+.posts li i{
+	font-size: 0.5rem;
+	margin-right: 1rem;
+}
+.posts a{
+	color: #666;
+	font-size: 1.1rem;
+}
+
+/* for footer */
+footer {
+	background-color: #f5f5f5;
+	padding: 5px 0;
+	clear: both;
+	border-top: 1px solid #ccc;
+	color: #666;
+}
+footer a{
+	color: #666;
+}
+
+@media only screen and (max-width: 800px) {
+	header h2{
+		border-left: 0;
+		margin-top: 0.5rem;
+		padding-left: 0;
+		font-size: 18px;
+	}
+	header .logo{
+		text-align: center;
+	}
+}
