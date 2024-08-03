@@ -16,30 +16,30 @@ define('ROUTER_SUPPLIER', 'supplier/');
 
 // domain, api
 
-$domain_api = "v1.api.daisan.vn/api";
-$domain = "xaydung.daisan.asia";
+$domain_api = 'v1.api.daisan.vn/api';
+$domain = 'xaydung.daisan.asia';
 
 if(is_localhost()){
-	$domain = "daisan";
-	$domain_api = "v1.api.daisan.vn/api";
+	$domain = 'daisan';
+	$domain_api = 'v1.api.daisan.vn/api';
 
-	define("DOMAIN_API", "http://".$domain_api."/");
-    define("DOMAIN", "http://" . $domain);
-    define('URL_ADMIN', "http://" . $domain.'ds_admin/');
-    define("URL_PAGEADMIN", "http://" .$domain."sellercenter/");
-    define("URL_PAGE", "http://" . $domain."shop/");
-    define("URL_HELPCENTER", "http://" . $domain."helpcenter/");
-    define("URL_SOURCING", "http://" . $domain."sourcing/");
-	define("URL_BLOG", "http://$domain/blog");
+	define('DOMAIN_API', 'http://'.$domain_api.'/');
+    define('DOMAIN', 'http://' . $domain.'/');
+	define('URL_ADMIN', DOMAIN . 'ds_admin/');
+    define('URL_PAGEADMIN', DOMAIN.'sellercenter/');
+    define('URL_PAGE', DOMAIN.'shop/');
+    define('URL_SOURCING', DOMAIN.'sourcing/');
+	define('URL_HELPCENTER', DOMAIN.'helpcenter/');
+	define('URL_BLOG', DOMAIN.'blog');
 }else{
-    define("DOMAIN_API", "http://".$domain_api."/");
-    define("DOMAIN", "http://".$domain."/");
+    define('DOMAIN_API', 'http://'.$domain_api.'/');
+    define('DOMAIN', 'http://'.$domain.'/');
     define('URL_ADMIN', DOMAIN . 'ds_admin/');
-    define("URL_PAGEADMIN", "http://".$domain."/sellercenter/");
-    define("URL_PAGE", "http://".$domain."/shop/");
-    define("URL_SOURCING", "http://$domain/sourcing/");
-	define("URL_HELPCENTER", "http://$domain/helpcenter/");
-	define("URL_BLOG", "http://blog.$domain/");
+    define('URL_PAGEADMIN', DOMAIN.'sellercenter/');
+    define('URL_PAGE', DOMAIN.'shop/');
+    define('URL_SOURCING', DOMAIN.'sourcing/');
+	define('URL_HELPCENTER', DOMAIN.'helpcenter/');
+	define('URL_BLOG', 'http://blog'.$domain.'/');
 }
 define('ROUTER_SEARCH', 'product');
 define("URL_IMAGE", "http://static.daisan.vn/");

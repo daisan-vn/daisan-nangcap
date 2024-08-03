@@ -1,6 +1,6 @@
 {capture name='_smarty_debug' assign=debug_output}
     <!DOCTYPE html>
-    <html lang="en">
+    <html lang="vi">
     <head>
         <title>Smarty Debug Console</title>
         <style>
