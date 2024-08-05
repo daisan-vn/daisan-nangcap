@@ -7,7 +7,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<title>Administrator</title>
+<title>Quản trị</title>
 <base href="{$arg.admin}">
 <link href="{$arg.domain}favicon.ico" rel="shortcut icon">
 

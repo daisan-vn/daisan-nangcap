@@ -48,8 +48,7 @@ class Blog {
         		'type' => $this->help->get_select_from_array($a_filter_type, isset($_GET['t'])?$_GET['t']:0),
         		'key' => isset($_GET['k'])?$_GET['k']:''
         );
-        $client_id = '356627533944-f84pull2l3ipfiied3vuluqi15udap0p.apps.googleusercontent.com';
-        if(check_is_localhost()) $client_id = '356627533944-gei9tqhav75602dbqgnh0u5a06olq7cn.apps.googleusercontent.com';
+
         $this->arg = array(
             'stylesheet' => DOMAIN . "site/blog/webroot/",
     		'timenow' => time(),
@@ -60,10 +59,10 @@ class Blog {
     		'lang' => $lang,
     		'login' => $login,
     		'noimg' => NO_IMG,
-            'logo' => $this->media->get_images(1),
+            'logo' => $this->media->get_image_byid(1),
             'search_key' => isset($_GET['key'])?trim($_GET['key']):null,
             'url_blog' => URL_BLOG,
-            'client_id' => $client_id
+            'client_id' => GOOGLE_CLIENT_ID,
         );
         
         $this->get_seo_metadata();

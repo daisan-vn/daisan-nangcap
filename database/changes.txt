@@ -1,5 +1,0 @@
-﻿Bảng hls_taxonomy:
-Thêm các field:
-	lft 	(bigint 20)
-	rgt 	(bigint 20)
-	level 	(tinyint 4)

@@ -3,9 +3,6 @@
 class Tool extends Main {
 
     public function __construct() {
-        ini_set('display_errors', 1);
-        error_reporting(E_ALL);
-
         parent::__construct();
     }
 

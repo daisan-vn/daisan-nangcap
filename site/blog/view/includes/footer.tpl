@@ -198,5 +198,3 @@
         </div>
     </div>
 </div>
-<div class="fb-customerchat" attribution=setup_tool page_id="444802002267924" logged_in_greeting="Chào bạn! Bạn đang cần sản phẩm gì? Có thể gửi tin nhắn cho chúng tôi tại đây." logged_out_greeting="Chào bạn! Bạn đang cần sản phẩm gì? Có thể gửi tin nhắn cho chúng tôi tại đây.">
-</div>

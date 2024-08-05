@@ -45,7 +45,7 @@ function noticeMsg(title, text, type){
 
 function activeItem(Table, Id) {
 	loading();
-	$.post("?mod=help&site=ajax_active_item", {'Table': Table, 'Id': Id}).done(function (data) {
+	$.post("?mod=help&site=ajax_active_item", {'table': Table, 'id': Id}).done(function (data) {
 		if (data == '0') noticeMsg('Message', 'Cập nhật trạng thái thất bại.', 'error');
 		else {
 			$("#stt" + Id).html(data);

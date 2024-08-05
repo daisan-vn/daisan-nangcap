@@ -40,10 +40,6 @@ class Statis extends Main {
     }
 
     public function product() {
-
-        // ini_set('display_errors', true);
-        // error_reporting(E_ALL);
-
         $img_help = \Lib\Core\Image::instance();
         $product_help = \Lib\Dbo\Product::instance();
 

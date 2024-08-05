@@ -2,7 +2,8 @@
 .vscode/
 
 # Loại bỏ các thư mục "upload"
-site/upload/
+site/upload/products
+site/upload/media
 
 # Loại bỏ các thư mục "cache"
 **/*cache*/

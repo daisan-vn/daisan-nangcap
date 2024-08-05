@@ -33,8 +33,6 @@ class Autorun extends Admin {
 //             $a_metas[] = trim($element->plaintext);
 //         }  
         
-//         lib_dump($a_metas);
-        
 //         $smarty->display(LAYOUT_DEFAULT);
     }
 
@@ -225,8 +223,6 @@ class Autorun extends Admin {
 	}
 
     function product_2_elastic() {
-        // ini_set('display_errors', 1);
-        // error_reporting(E_ALL);
 
         $src = SITE_SRC_NAME;
         
@@ -417,8 +413,6 @@ class Autorun extends Admin {
     }
 
     function update_productsearch_check_exist() {
-        // ini_set('display_errors', 1);
-        // error_reporting(E_ALL);
 
         $page = isset($_GET['page'])? intval($_GET['page']): 1;
         
@@ -472,8 +466,6 @@ class Autorun extends Admin {
     }
 
     function update_productsearch_by_condition() {
-        ini_set('display_errors', true);
-        error_reporting(E_ALL);
 
         $where = '';
         $option = $_REQUEST;
@@ -533,46 +525,6 @@ class Autorun extends Admin {
         }
 
         echo 'Đã cập nhật dữ liệu thành công.';
-    }
-    
-    function upload_img_to_amazon(){
-//         $products = $this->pdo->fetch_all("SELECT id,page_id,images FROM products 
-//                 WHERE status=0 AND page_id<>0 AND images IS NOT NULL LIMIT 2");
-        
-        $v = $this->pdo->fetch_one("SELECT id,page_id,images FROM products
-                WHERE id=611677");
-        
-        // foreach ($products AS $v){
-            $a_images = explode(";", $v['images']);
-            $img = 'http://imgs.daisan.vn/pages/'.$v['page_id'].'/'.@$a_images[0];
-            
-            $img2 = 'https://imgs.daisan.vn/pages/22975/1540440991_9afdb01339ef137ea2f3fb1aa64a9024.jpeg';
-            
-            $curl_handle=curl_init();
-            curl_setopt($curl_handle, CURLOPT_URL,$img2);
-            curl_setopt($curl_handle, CURLOPT_CONNECTTIMEOUT, 2);
-            curl_setopt($curl_handle, CURLOPT_RETURNTRANSFER, 1);
-            curl_setopt($curl_handle, CURLOPT_USERAGENT, 'Your application name');
-            $query = curl_exec($curl_handle);
-            curl_close($curl_handle);
-            
-            var_dump($query); exit();
-            
-            
-            
-            $fields = [
-                'uploaded_file' => file_get_contents($img),
-                'width' => 270,
-                'height' => 270,
-                'name_file_upload' => DIR_UPLOAD_S3 . $v['page_id'],
-                'type_resize' => 'fit',
-                'id' => $v['id']
-            ];
-            
-            $this->callApiUpload(DOMAIN_API.'resize-image',  $fields, 'POST');
-        //     var_dump(file_get_contents($img));
-        // }
-        
     }
     
     function get_images($str, $page_id){

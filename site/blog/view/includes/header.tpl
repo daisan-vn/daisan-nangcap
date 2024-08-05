@@ -4,9 +4,9 @@
         <div class="container-fluid">
             <nav class="navbar navbar-expand-lg">
                 <button class="btn btn-menu hmenu-open" type="button">
-                    <img src="https://daisan.vn/site/main/webroot/images/nav-menu-black.png" height="18">
+                    <img src="/site/main/webroot/images/nav-menu-black.png" height="18">
                 </button>
-                <a class="navbar-brand logo" href="./"><img src="{$arg.logo.image|default:$arg.noimg}"></a>
+                <a class="navbar-brand logo" href="./"><img src="{$arg.logo|default:$arg.noimg}"></a>
                 <div class="d-flex align-items-center ml-auto d-block d-sm-none">
                     <div class="p-2 bd-highlight">
                         {if $arg.login eq 0}
@@ -20,14 +20,7 @@
                         </a>
                     </div>
                 </div>
-                <!--
-				<div class="form-search d-block d-sm-none">
-					<input type="text" id="mKeyword" value="{$main_filter.key|default:''}" placeholder="Search Daisan">
-					<button class="btn search-btn" onclick="msearch();">
-						<i class="fa fa-search"></i>
-					</button>
-				</div>
-				-->
+
                 <div class="navbar-collapse" id="navbarSupportedContent">
                     <div class="form-search input-group my-2 my-lg-0">
                         <input type="hidden" id="filter_cate_id" value="{$main_filter.t|default:0}">
@@ -37,24 +30,6 @@
                         <span class="search-clear"><img src="{$arg.stylesheet}images/remove-key.svg" width="15"></span>
                         <button class="btn search-btn" type="button" onclick="search();"><i
                                 class="fa fa-search fa-fw"></i></button> {include file="../includes/suggest.tpl"}
-                        <!--<div class="cate-in-search">
-							<div class="card card-body border-0">
-								<h2 class="text-lg text-b">Tìm trong danh mục ...</h2>
-								<div class="row">
-									<div class="col-4">
-										<a href="javascript:void(0);" onclick="set_search_cate(0);" id="search_cate_0"
-											class="line-1 mb-2 d-block">Tất cả danh mục</a>
-									</div>
-									{foreach from=$a_main_category key=k item=v}
-									<div class="col-4">
-										<a href="javascript:void(0);" onclick="set_search_cate({$v.id});"
-											id="search_cate_{$v.id}" class="line-1 mb-2 d-block"
-											title="{$v.name}">{$v.name}</a>
-									</div>
-									{/foreach}
-								</div>
-							</div>
-						</div>-->
                     </div>
                     <ul class="head_top--right navbar-nav ml-auto nav-right">
                         <li class="nav-item dropdown">
@@ -104,59 +79,6 @@
         </div>
     </div>
     {/if}
-    <!--<div id="head_main" class="d-none d-sm-block">
-        <div class="container-fluid">
-            <div class="navbar navbar-expand navbar-dark flex-column flex-md-row bd-navbar align-items-center navbar-nav-scroll ">
-                <div class="dropdown" id="hplace">
-                    <a class="ship-location" href="javascript:void(0)" id="dropdownMenuButton" data-toggle="dropdown">
-                        <span class="img-location-ship"><i class="fa fa-map-marker" aria-hidden="true"></i></span> Giao tới<br>{$hcache.place.name|default:'Toàn Quốc'}
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        <a class="dropdown-item" href="javascript:void(0)" onclick="SetDelive(0, 'Toàn Quốc');">Toàn
-							Quốc</a> {foreach from=$tax.province item=v}
-                        <a class="dropdown-item" href="javascript:void(0)" onclick="SetDelive({$v.Id}, '{$v.Name}');">{$v.Name}</a> {/foreach}
-                    </div>
-                </div>
-                <div class="pl-sm-5 pl-0">
-                    <ul class="navbar-nav bd-navbar-nav flex-row">
-                        {if count($tax.menu_main) gt 0} {foreach from=$tax.menu_main item=data}
-                        <li class="nav-item">
-                            <a class="nav-link py-1 line-1" href="{$data.url}">{$data.name}</a>
-                        </li>
-                        {/foreach} {else}
-                        <li class="nav-item">
-                            <a class="nav-link py-1 line-1" href="?site=promotions&mod=product">Ưu Đãi Hôm Nay</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link py-1 line-1" href="{$arg.url_sourcing}">Yêu Cầu Báo Giá</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link py-1 line-1" href="{$arg.url_helpcenter}search.html?cId=932">Bán Cùng
-								Daisan</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link py-1 line-1" href="{$arg.url_helpcenter}search.html?cId=898">Chính Sách
-								Khách Hàng</a>
-                        </li>
-                        {/if}
-                    </ul>
-                </div>
-                <ul class="navbar-nav ml-md-auto d-none d-sm-block">
-                    <li class="nav-item">
-                        <a class="nav-link pl-2 pr-1 mx-1 py-1" href="tel:1800 6464 98">
-                            <i class="fa fa-phone fa-fw"></i>Hotline: 1800 6464 98</a>
-                    </li>
-                </ul>
-                <ul class="navbar-nav d-none d-sm-block">
-                    <li class="nav-item">
-                        <a class="nav-link pl-2 pr-1 mx-1 py-1 font-weight-bold" href="{$arg.url_helpcenter}">
-                            <i class="fa fa-bell-o fa-fw"></i>Trung tâm trợ giúp Daisan</a>
-                    </li>
-
-                </ul>
-            </div>
-        </div>
-    </div>-->
 
     <div class="container">
         <div class="menu">
@@ -166,15 +88,6 @@
                 <li class="nav-item"><a class="nav-link " href="{$v.url}">{$v.name}</a></li>
                 {/foreach}
             </ul>
-            <!--
-            <ul class="nav">
-                <li class="nav-item">
-                    <a class="nav-link" href="# ">Đăng ký</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="# ">Đăng nhập</a>
-                </li>
-            </ul>-->
         </div>
     </div>
     {if $is_mobile}

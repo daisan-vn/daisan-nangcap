@@ -108,6 +108,5 @@
 </ul>
 <ul class="nav nav-sidebar">
 	<li><a href="?mod=option&site=thumb"><i class="fa fa-picture-o fa-fw"></i> Upload ảnh</a></li>
-	<li><a href="?mod=language&site=index"><i class="fa fa-language fa-fw"></i> Dịch ngôn ngữ</a></li>
 </ul>
 {/if}

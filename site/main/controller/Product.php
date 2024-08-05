@@ -19,7 +19,7 @@ class Product extends Main
             $data['date_log'] = date('Y-m-d');
             $data['updated'] = time();
             $data['user_ip'] = $this->str->get_client_ip();
-            $data['ismobile'] = $this->isMobile();
+            $data['ismobile'] = isMobile();
             $details = json_decode(file_get_contents("http://ipinfo.io/" . $this->str->get_client_ip() . "/json"));
             if ($details) {
                 $a_address = [];
@@ -181,9 +181,6 @@ class Product extends Main
     }
 
     function search(){
-        ini_set('display_errors', 1);
-        error_reporting(E_ALL);
-
         global $login;
 
         \Service\Ads::instance()->resetDailyPoint();

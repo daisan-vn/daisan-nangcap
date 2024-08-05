@@ -2,8 +2,7 @@
 	<h1 style="margin-top: 10px; font-size: 30px;">Chào mừng bạn truy
 		cập vào trang quản trị nội dung website !</h1>
 	<h5>
-		DAISAN,JSC &copy; 2018, truy cập trang chủ của chúng tôi <a href="http://daisan.vn"
-			target="_blank">Daisan.vn</a>
+		DAISAN,JSC &copy; 2018, truy cập trang chủ của chúng tôi <a href="/" target="_blank">Daisan.vn</a>
 	</h5>
 	<hr>
 	<div class="">
@@ -11,7 +10,19 @@
 			<div class="row">
 				{{foreach from=$package key=k item=data}}
 				<div class="col-md-3">
-					<div class="package_item color{$k+1}" style="margin-bottom: 1.5rem;">						<div class="panel-body">							<a href="?mod=pages&site=payment&package={$data.id}&status=1">								<div class="details">									<div class="number">										<span data-counter="counterup" data-value="{$data.number}">{$data.number}</span>									</div>									<div class="desc"> {$data.name} </div>									<div>{$data.money|default:0|number_format}đ</div>								</div>							</a>						</div>					</div>
+					<div class="package_item color{$k+1}" style="margin-bottom: 1.5rem;">
+						<div class="panel-body">
+							<a href="?mod=pages&site=payment&package={$data.id}&status=1">
+								<div class="details">
+									<div class="number">
+										<span data-counter="counterup" data-value="{$data.number}">{$data.number}</span>
+									</div>
+									<div class="desc"> {$data.name} </div>
+									<div>{$data.money|default:0|number_format}đ</div>
+								</div>
+							</a>
+						</div>
+					</div>
 				</div>
 				{/foreach}
 				<div class="col-md-3">					<div class="package_item color3" style="color: #fff;">						<div class="panel-body">							<div class="details">								<div class="number">									<span data-counter="counterup" data-value="{$count_product.number}">{$out.money|default:0|number_format}đ</span>								</div>								<div class="desc"> Tổng doanh thu gian hàng</div>							</div>						</div>					</div>				</div>				<div class="col-md-3">					<div class="package_item color4">						<div class="panel-body">							<a href="?mod=product&site=ads">								<div class="details">									<div class="number">										<span data-counter="counterup" data-value="{$count_product.number}">{$count_product}</span>									</div>									<div class="desc"> Sản phẩm chạy quảng cáo </div>								</div>							</a>						</div>					</div>				</div>

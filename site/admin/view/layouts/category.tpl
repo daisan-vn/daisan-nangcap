@@ -57,7 +57,7 @@
 						</div>
 						<div class="col-6 col-md-2">
 							<a class="logo-main" href="./"> <img
-								src="{$arg.logo.image|default:$arg.noimg}" class="img-fluid">
+								src="{$arg.logo|default:$arg.noimg}" class="img-fluid">
 							</a>
 						</div>
 						<div class="col-4 d-md-none">

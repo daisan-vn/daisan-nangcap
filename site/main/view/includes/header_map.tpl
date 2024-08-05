@@ -3,7 +3,7 @@
 	<div class="head_main py-2 shadow-sm">
 		<div class="container-fluid px-2 px-sm-5">
 			<nav class="navbar navbar-expand-lg px-0">
-				<a class="navbar-brand" href="./"><img src="{$arg.logo.image}"
+				<a class="navbar-brand" href="./"><img src="{$arg.logo}"
 					height="36"></a>
 				<form class="form-inline my-2 my-lg-0 w-sm-100 search">
 					<div class="input-group">

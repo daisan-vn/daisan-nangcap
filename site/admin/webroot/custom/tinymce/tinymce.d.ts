@@ -289,7 +289,7 @@ interface DomQuery<T extends Node = Node> extends ArrayLike<T> {
     sort(compareFn?: (a: T, b: T) => number): T[];
     text(value: string): DomQuery;
     text(): string;
-    to[]: T[];
+    toArray(): T[];
     toggleClass(className: string, state?: boolean): this;
     trigger(name: string | {
         type: string;

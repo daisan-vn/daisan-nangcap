@@ -18,7 +18,7 @@
 </section>
 <footer class="bg-dark text-white py-3">
 	<div class="container text-center">
-		<img class="" src="{$arg.logo.image}" height="50px">
+		<img class="" src="{$arg.logo}" height="50px">
 		<p class="child-company mb-2 mt-3">{$option.contact.name} -
 			{$option.contact.slogan}</p>
 		<p class="text-nm mb-1 mx-2">{$option.contact.description}</p>

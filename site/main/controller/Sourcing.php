@@ -15,7 +15,6 @@ class Sourcing extends Main {
 		);
 	}
 	
-	
 	function index() {
 		$key = isset($_GET['k']) ? trim($_GET['k']) : null;
 		$location = isset($_GET['location'])?intval($_GET['location']):0;

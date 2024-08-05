@@ -833,8 +833,6 @@ class Api{
 
 
     function getDataApify(){
-        ini_set('display_errors', true);
-        error_reporting(E_ALL);
         
         $elastic = \Lib\Elasticsearch::instance();
         $curlAPI = \Lib\Core\Api::instance();
@@ -942,8 +940,6 @@ class Api{
 
 
     function add_dataApify_productSearch(){
-        ini_set('display_errors', true);
-        error_reporting(E_ALL);
 
         $src = 'book';
         $elastic = \Lib\Elasticsearch::instance();

@@ -28,7 +28,6 @@ class Main {
         $this->option['contact'] = $this->get_options('contact');
         $this->_get = $_get;
 
-        // $this->hcache = $this->set_login();
         $this->hcache = isset($_COOKIE['HodineCache'])?json_decode($_COOKIE['HodineCache'], true):[];
 
         // $this->login = intval(@$this->hcache['user']['id']);
@@ -84,10 +83,7 @@ class Main {
             }
         }
         $sugest_key = (is_array(@$this->hcache['key']))?$this->hcache['key']:[];
-        //lib_dump($this->cache_tax['category']);
-       
-        $client_id = '356627533944-f84pull2l3ipfiied3vuluqi15udap0p.apps.googleusercontent.com';
-        if(check_is_localhost()) $client_id = '356627533944-gei9tqhav75602dbqgnh0u5a06olq7cn.apps.googleusercontent.com';
+
         $this->arg = array(
             'stylesheet' => DOMAIN . "site/main/webroot/",
             'timenow' => time(),
@@ -108,22 +104,24 @@ class Main {
 
             // 'url_seller' => 'https://sellercenter.daisan.vn/',
             // 'url_account' => 'https://account.daisan.vn/',
+            
             'url_seller' => '/sellercenter',
             'url_account' => '/?mod=account&site=index',
 
             'url_blog' => 'https://blog.daisan.vn/',
-            'logo' => $this->media->get_images(1),
-            'background' => $this->media->get_images(5),
+
+            'logo' => $this->media->get_image_byid(1),
+
             'json_keyword' => DOMAIN.'constant/info/keywords.json',
             'json_sugest_cate' => $sugest_cate,
             'json_sugest_key' => $sugest_key,
             'isadmin' => isset($this->hcache['user']['isadmin'])?$this->hcache['user']['isadmin']:0,
             'ismobile' => isMobile(),
-            'client_id' => $client_id,
+            'client_id' => GOOGLE_CLIENT_ID,
             'end_countdown' => date("Y/m/d", strtotime('monday next week')),
-            'src' => 'construction',
-            'login_token' => base64_encode(THIS_LINK)
+            'src' => SITE_SRC_NAME,
         );
+
         $this->smarty->assign('a_main_category', $this->cache_tax['category']);
         $this->smarty->assign('a_sup_category', $this->cache_tax['category_sup']);
         $this->smarty->assign('hcache', $this->hcache);
@@ -137,30 +135,8 @@ class Main {
         $this->smarty->assign('content', "../" . str_replace('_', '/', $mod) . "/" . $site . ".tpl");
     }
     
-    
-    function set_login(){
-        $token = isset($_GET['set_login_token']) ? trim($_GET['set_login_token']) : '';
-        $rt = isset($_COOKIE['HodineCache'])?json_decode($_COOKIE['HodineCache'], true):[];
-        if($token!=''){
-            $a_token = explode('_', base64_decode($token));
-            $user = $this->pdo->fetch_one("SELECT id,name,avatar,phone,email FROM users WHERE email='".trim(@$a_token[2])."'");
-            if(@$user['id']>0&&$a_token[1]>(time()-120)){
-            // if(@$user['id']>0){
-                $user['avatar'] = $this->img->get_image($this->user->get_folder_img($user['id']), $user['avatar']);
-                $rt['user'] = $user;
-                setcookie('HodineCache', json_encode($rt), time() + (86400 * 30 * 30), "/");
-            }
-        }elseif(isset($_GET['set_logout_token'])){
-            $rt['user'] = [];
-            setcookie('HodineCache', json_encode($rt), time() + (86400 * 30 * 30), "/");
-        }
-        return $rt;
-    }
-    
-    
     function set_tax(){
         $db = json_decode(@file_get_contents(FILE_TAX), true);
-        lib_dump($db);
         if(!is_array($db)) $db = [];
         $db['category'] = $this->tax->get_taxonomy('product', 0, null, null, 1);
         $db['category_sup'] = $this->tax->get_taxonomy('product', 0, null, null, 1,1,1);
@@ -176,7 +152,6 @@ class Main {
         file_put_contents(FILE_TAX, json_encode($db));
         return $db;
     }
-    
 
     function set_cont_home(){
         $db = json_decode(@file_get_contents(FILE_CONT), true);
@@ -370,7 +345,7 @@ class Main {
             $data['date_log'] = date('Y-m-d');
             $data['updated'] = time();
             $data['user_ip'] = $this->str->get_client_ip();
-            $data['ismobile'] = $this->isMobile();
+            $data['ismobile'] = isMobile();
             // $details = json_decode(file_get_contents("http://ipinfo.io/".$this->str->get_client_ip()."/json"));
             // if($details){
             //     $a_address = [];
@@ -383,8 +358,5 @@ class Main {
             
             $this->pdo->insert('accesslogs', $data);
         }
-    }
-    function isMobile() {
-        return preg_match("/(android|avantgo|blackberry|bolt|boost|cricket|docomo|fone|hiptop|mini|mobi|palm|phone|pie|tablet|up\.browser|up\.link|webos|wos)/i", @$_SERVER["HTTP_USER_AGENT"]);
     }
 }

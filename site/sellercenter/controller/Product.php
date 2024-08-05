@@ -636,9 +636,6 @@ class Product extends Pageadmin
      */
     function editDetail()
     {
-        // ini_set('display_errors', true);
-        // error_reporting(E_ALL);
-
         global $login;
         $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
         $product = $this->pdo->fetch_one("SELECT a.* FROM products a WHERE a.id=$id AND a.page_id=" . $this->page_id);

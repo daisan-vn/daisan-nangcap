@@ -62,7 +62,7 @@
                     </div>
                 </td>
                 <td style="max-width: 160px;">{$data.position}</td>
-                <td><input class="form-control sort_input" type="number" name="sort" value="{$data.sort}" min="0" max="9999" oninput="sortItem('vsc_posts', {$data.id}, this.value);" /></td>
+                <td><input class="form-control sort_input" type="number" name="sort" value="{$data.sort}" min="0" max="9999" oninput="sortItem('posts', {$data.id}, this.value);" /></td>
                 <td class="text-center" id="featured{$data.id}">{$data.featured}</td>
                 <td class="text-center" id="stt{$data.id}">{$data.status}</td>
                 <td class="text-right" style="min-width:88px">

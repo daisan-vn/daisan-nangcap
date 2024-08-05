@@ -3,7 +3,7 @@
 		<div class="row">
 			<div class="col-2">
 				<a href="{$arg.url_location}">
-					<img src="{$arg.logo.image|default:$arg.noimg}" height="50">
+					<img src="{$arg.logo|default:$arg.noimg}" height="50">
 				</a>
 			</div>
 			<div class="col-5">

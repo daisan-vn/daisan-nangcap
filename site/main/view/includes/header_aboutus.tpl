@@ -48,7 +48,7 @@
 		<div class="container">
 			<div class="row">
 				<div class="col-sm-3 my-auto col-6">
-					<a href="./"><img class="" src="{$arg.logo.image}" height="30px"></a>
+					<a href="./"><img class="" src="{$arg.logo}" height="30px"></a>
 				</div>
 				<div class="col-sm-9 col-6" id="about_menu">
 					<button

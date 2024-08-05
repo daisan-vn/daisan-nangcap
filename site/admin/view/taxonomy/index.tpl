@@ -252,11 +252,12 @@ $(window).ready(function(){
             BulkDelete('taxonomy', 'ajax_bulk_delete');
         }
         else if (bulk == 1) {
-            BulkActive('vsc_taxonomy', 1);
+            BulkActive('taxonomy', 1);
         }
         else if (bulk == 2) {
-            BulkActive('vsc_taxonomy', 0);
+            BulkActive('taxonomy', 0);
         }
+        location.reload();
     }
 
     function geticon(id) {

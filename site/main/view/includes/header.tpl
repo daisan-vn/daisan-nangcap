@@ -1,9 +1,3 @@
-<!--
-<div class="fb-customerchat" attribution=setup_tool page_id="{$page.fb_id|default:444802002267924}"
-	logged_in_greeting="Chào bạn! Bạn đang cần sản phẩm gì? Có thể gửi tin nhắn cho chúng tôi tại đây."
-	logged_out_greeting="Chào bạn! Bạn đang cần sản phẩm gì? Có thể gửi tin nhắn cho chúng tôi tại đây.">
-</div>
--->
 <header>
 
     <div id="head_link" class="d-none d-sm-block">
@@ -21,9 +15,9 @@
         <div class="container-fluid">
             <nav class="navbar navbar-expand-lg">
                 <button class="btn btn-menu hmenu-open" type="button">
-					<img src="https://daisan.vn/site/main/webroot/images/nav-menu-black.png" height="18">
+					<img src="/site/main/webroot/images/nav-menu-black.png" height="18">
 				</button>
-                <a class="navbar-brand logo" href="./"><img src="{$arg.logo.image|default:$arg.noimg}"></a>
+                <a class="navbar-brand logo" href="./"><img src="{$arg.logo|default:$arg.noimg}"></a>
                 <div class="d-flex align-items-center ml-auto d-block d-sm-none">
                     <div class="p-2 bd-highlight">
                         {if $arg.login eq 0}

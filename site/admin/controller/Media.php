@@ -151,45 +151,48 @@ class Media extends Admin {
 
 
     function ajax_save_folder() {
+        $data = [];
         $id = isset($_POST['folder_id']) ? $_POST['folder_id'] : 0;
-        $data['name'] = $this->string->del_danger($_POST['folder_name']);
-        if ($id == 0) {
-            $check = $this->pdo->check_exist("SELECT id FROM taxonomy WHERE type='folder' AND name='".$data['name']."'");
-            if ($check) {
-                $data['mes'] = 'exist';
-                echo json_encode($data);
-                exit();
+        $data['name'] = $this->string->del_danger($_POST['folder_name'] ?? '');
+        if ($data['name']) {
+            if ($id == 0) {
+                $check = $this->pdo->check_exist("SELECT id FROM taxonomy WHERE type='folder' AND name='".$data['name']."'");
+                if ($check) {
+                    $data['mes'] = 'exist';
+                    echo json_encode($data);
+                    exit();
+                }
+    
+                $data['alias'] = $this->string->str_convert($data['name']);
+                if (is_dir($this->upload_path.$data['alias'].'/')) {
+                    $data['alias'] = $data['alias'].substr(time(), -8);
+                }
+                $data['type'] = 'folder';
+                $data['status'] = 1;
+                $insertId = $this->pdo->insert('taxonomy', $data);
+    
+                @mkdir($this->upload_path.$data['alias'].'/', 0777, true);
+                @chmod($this->upload_path.$data['alias'].'/', 0777);
+                @mkdir($this->thumb_path.$data['alias'].'/', 0777, true);
+                @chmod($this->thumb_path.$data['alias'].'/', 0777);
+            }else {
+                $check = $this->pdo->check_exist("SELECT id FROM taxonomy WHERE id<>$id AND name='".$data['name']."'");
+                if ($check) {
+                    $data['mes'] = 'exist';
+                    echo json_encode($data);
+                    exit();
+                }
+                $this->pdo->update('taxonomy', $data, 'taxonomy_id='.$id);
             }
-
-            $data['alias'] = $this->string->str_convert($data['name']);
-            if (is_dir($this->upload_path.$data['alias'].'/')) {
-                $data['alias'] = $data['alias'].substr(time(), -8);
+            $count_folder = $this->pdo->count_rows("SELECT id FROM taxonomy WHERE type='folder'");
+            if ($id == 0 && $count_folder == 1) {
+                $data['mes'] = 'unique';
+                $data['folder_unique'] = $insertId;
             }
-            $data['type'] = 'folder';
-            $data['status'] = 1;
-            $insertId = $this->pdo->insert('taxonomy', $data);
-            @mkdir($this->upload_path.$data['alias'].'/', 0777);
-            @chmod($this->upload_path.$data['alias'].'/', 0777);
-            @mkdir($this->thumb_path.$data['alias'].'/', 0777);
-            @chmod($this->thumb_path.$data['alias'].'/', 0777);
-        }else {
-            $check = $this->pdo->check_exist("SELECT id FROM taxonomy WHERE id<>$id AND name='".$data['name']."'");
-            if ($check) {
-                $data['mes'] = 'exist';
-                echo json_encode($data);
-                exit();
+            elseif ($id == 0 && $count_folder != 0) {
+                $data['mes'] = 0;
             }
-            $this->pdo->update('vsc_taxonomy', $data, 'taxonomy_id='.$id);
         }
-        $count_folder = $this->pdo->count_rows("SELECT id FROM taxonomy WHERE type='folder'");
-        if ($id == 0 && $count_folder == 1) {
-            $data['mes'] = 'unique';
-            $data['folder_unique'] = $insertId;
-        }
-        elseif ($id == 0 && $count_folder != 0) {
-            $data['mes'] = 0;
-        }
-
         echo json_encode($data);
     }
 
@@ -219,11 +222,14 @@ class Media extends Admin {
 
     function get_a_folder($return=0) {
         $value = $this->pdo->fetch_one("SELECT id FROM taxonomy WHERE type='folder' ORDER BY id LIMIT 1");
-        if ($return == 0) {
-            echo $value['id'];
-            exit();
+        if ($value) {
+            if ($return == 0) {
+                echo $value['id'];
+                exit();
+            }
+            return $value['id'];
         }
-        return $value['id'];
+        return 0;
     }
 
 
@@ -234,7 +240,7 @@ class Media extends Admin {
         if(isset($_FILES['images']) && count($_FILES['images'])>0){
             $check_folder = $this->pdo->check_exist("SELECT id FROM taxonomy WHERE type='folder' LIMIT 1");
             if (!$check_folder) {
-                $data_f['name'] = 'General';
+                $data_f['name'] = 'Tổng hợp';
                 $data_f['alias'] = 'general';
                 $data_f['type'] = 'folder';
                 $data_f['status'] = 1;
@@ -248,10 +254,9 @@ class Media extends Admin {
                 $img['name'] = $_FILES['images']['name'][$i];
                 $img['type'] = $_FILES['images']['type'][$i];
                 $img['tmp_name'] = $_FILES['images']['tmp_name'][$i];
-                var_dump($_FILES['images']['tmp_name'][$i]);
                 $img['error'] = $_FILES['images']['error'][$i];
                 $img['size'] = $_FILES['images']['size'][$i];
-//                 $imgname = $this->img->upload($this->media->get_path($folder), $img, $_POST['image_width']);
+                $imgname = $this->img->upload($this->media->get_path($folder), $img, $_POST['image_width']?? null);
                 unset($img);
                 if($imgname){
 	                $data['name'] = $imgname;
@@ -259,15 +264,15 @@ class Media extends Admin {
 	                $data['user_id'] = $login;
 	                $data['created'] = time();
 	                $id = $this->pdo->insert('media', $data);
-// 	                $this->make_thumb($folder, $imgname, $_POST['thumbsize'], $_POST['thumbratio']);
+	                $this->make_thumb($folder, $imgname, $_POST['thumbsize']?? 0, $_POST['thumbratio']?? 0);
                 }
             }
-//             lib_redirect("?mod=media&site=index");
+            lib_redirect("?mod=media&site=index");
         }
 
-		$out ['thumbsize'] = $this->help->get_select_from_array ( $this->media->thumbsize, $this->get_option_item ( 'thumbsize' ), 0 );
-		$out ['thumbratio'] = $this->help->get_select_from_array ( $this->media->thumbratio, $this->get_option_item ( 'thumbratio' ), 0 );
-		$out ['image_width'] = $this->help->get_select_from_array ( $this->media->imagewidth, $this->get_option_item ( 'image_width' ), 0 );
+		$out['thumbsize'] = $this->help->get_select_from_array ( $this->media->thumbsize, $this->get_option_item ( 'thumbsize' ), 0 );
+		$out['thumbratio'] = $this->help->get_select_from_array ( $this->media->thumbratio, $this->get_option_item ( 'thumbratio' ), 0 );
+		$out['image_width'] = $this->help->get_select_from_array ( $this->media->imagewidth, $this->get_option_item ( 'image_width' ), 0 );
         $out['select_folder'] = $this->taxonomy->get_select_taxonomy('folder', 0, 0, null, null, 0);
         $out['select_type'] = $this->taxonomy->get_select_taxonomy('image', 0, 0, null, 'Chọn danh mục ảnh', 0);
         $out['position'] = $this->help->get_select_from_array($this->position);
@@ -278,9 +283,6 @@ class Media extends Admin {
 
     function ajax_upload() {
         global $login;
-
-        ini_set('display_errors', true);
-        error_reporting(E_ALL);
 
         if(isset($_FILES['image'])){
             $check_folder = $this->pdo->check_exist("SELECT id FROM taxonomy WHERE type='folder' LIMIT 1");
@@ -399,17 +401,18 @@ class Media extends Admin {
 
         $thumbnail = new \Lib\Core\Zebra();
         $thumbnail->source_path = $path_image.$imgname;
+
         if (!is_dir($path_image)) {
-            @mkdir($path_image, 0775);
+            @mkdir($path_image, 0775, true);
             @chmod($path_image, 0775);
         }
         if (!is_dir($path_thumb)) {
-            @mkdir($path_thumb, 0775);
+            @mkdir($path_thumb, 0775, true);
             @chmod($path_thumb, 0775);
         }
         $thumbnail->target_path = $path_thumb.$imgname;
         $thumbnail->jpeg_quality = 70;
-        $this->png_compression = 6;
+        $thumbnail->png_compression = 6;
         $thumbnail->preserve_aspect_ratio = true;
         $thumbnail->resize($thumbsize, $thumbheight, $thumbposition, -1);
     }

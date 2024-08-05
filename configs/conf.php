@@ -11,8 +11,8 @@ $PHPSESSID = session_id();
 $ext = ".html";
 
 define("THIS_LINK", get_this_link());
-// define("THIS_LINK", (isset($_SERVER['HTTPS'])?"https":"http")."://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']);
-define("URL_UPLOAD", DOMAIN . "site/upload/");
+
+define("URL_UPLOAD", DOMAIN.'site/upload/');
 define("DIR_UPLOAD", "../upload/");
 define("DIR_UPLOAD_S3", "upload/");
 
@@ -36,13 +36,10 @@ define('LAYOUT_ACCOUNT', 'account.tpl');
 define('LAYOUT_ABOUTUS','aboutus.tpl');
 define('LAYOUT_NONE', 'none.tpl');
 define("NO_IMG", URL_UPLOAD . "generals/noimg.jpg");
-define("LOGIN_IMG_DEFAULT",URL_UPLOAD . "generals/login.png");
-
+define("LOGIN_IMG_DEFAULT", URL_UPLOAD . "generals/login.png");
 
 function get_this_link() {
-	$uri = $_SERVER['REQUEST_URI'];
-	$uri = preg_replace('#\&?set_log(in|out)_token\=([a-zA-Z0-9_\-\=]+)#', '', $uri);
-	return (isset($_SERVER['HTTPS'])?"https":"http")."://".$_SERVER['HTTP_HOST'].$uri;
+	return (isset($_SERVER['HTTPS'])?"https":"http")."://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
 }
 
 function lib_build_session_name($name){

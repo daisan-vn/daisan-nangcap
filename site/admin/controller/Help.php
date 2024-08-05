@@ -7,7 +7,7 @@
 
 /* * ********    **************************** */
 
-class help extends Admin {
+class Help extends Admin {
 
     function __construct() {
         parent::__construct();
@@ -30,20 +30,52 @@ class help extends Admin {
     }
 
     function ajax_active_item() {
-        if (isset($_POST['Id'])) {
-            $value = $this->pdo->fetch_one("SELECT Status FROM ".$_POST['Table']." WHERE Id=".$_POST['Id']);
-            $curl_get_product = $this->curl_search_get_product($_POST['Id']);
-            if (@$value['Status'] == 0 || @$value['Status'] == 2) {
+        // kiếm tra nếu là bảng product thì cần xử lý thêm nghiệp vụ
+        // cái này áp dùng mô hình bắn event mới đúng
+
+        $id = isset($_POST['id']) ? intval($_POST['id']) : 0;
+        $table = isset($_POST['table']) ? trim($_POST['table']) : '';
+        
+        if ($id && $table) {
+            $value = $this->pdo->fetch_one("SELECT status FROM ".$table." WHERE Id=".$id.' LIMIT 1');
+
+            if ($value) {
+                if ($value['status'] == 0 || $value['status'] == 2) {
+                    $status = 1;
+                }
+                elseif($value['status'] == 1) {
+                    $status = 2;
+                }
+            }
+            else {
+                $status = 0;
+            }
+
+            $this->pdo->query("UPDATE ".$table." SET status=$status WHERE Id=".$id);
+            echo $this->help_get_status($status, $table, $id);
+            exit();
+        }
+        echo 0;
+    }
+
+    function __ajax_active_item() {
+        $id = isset($_POST['id']) ? intval($_POST['id']) : 0;
+        $table = isset($_POST['table']) ? trim($_POST['table']) : '';
+        
+        if ($id && $table) {
+            $value = $this->pdo->fetch_one("SELECT status FROM ".$table." WHERE Id=".$id.' LIMIT 1');
+            $curl_get_product = $this->curl_search_get_product($id);
+            if (@$value['status'] == 0 || @$value['status'] == 2) {
                 $status = 1;
                 // add index api
-                $curl_get_product = $this->curl_search_get_product($_POST['Id']);
-                $data = $this->pdo->fetch_one("SELECT * FROM ".$_POST['Table']." WHERE Id=".$_POST['Id']);
+                $curl_get_product = $this->curl_search_get_product($id);
+                $data = $this->pdo->fetch_one("SELECT * FROM ".$table." WHERE Id=".$id.' LIMIT 1');
 
                 $taxonomy_id = isset($data['taxonomy_id']) ? $data['taxonomy_id'] : 0;
                 $e_category = $this->pdo->fetch_one("SELECT name FROM taxonomy WHERE id=$taxonomy_id");
 
                 $page_id = isset($data['page_id']) ? $data['page_id'] : 0;
-                $e_package = $this->pdo->fetch_one("SELECT package_id, endtime FROM pagepackage WHERE page_id=$page_id");
+                $e_package = $this->pdo->fetch_one("SELECT package_id, endtime FROM pagepackage WHERE page_id=$page_id LIMIT 1");
                 $e_package['endtime'] = gmdate("Y-m-d", strtotime(@$e_package['endtime'])+7*3600);
 
                 $e_date = new DateTime();
@@ -75,36 +107,45 @@ class help extends Admin {
                 $fields['unit']                 = 'm2';
 
                 $dataCURL_str = json_encode($fields);
-                $this->curl_search_update_index($_POST['Id'], $dataCURL_str);
+                $this->curl_search_update_index($id, $dataCURL_str);
             }
 
-            elseif(@$value['Status'] == 1) {
+            elseif(@$value['status'] == 1) {
                 $status = 2;
                 //remove index api
-                $this->curl_search_delete_product($_POST['Id']);
+                $this->curl_search_delete_product($id);
             }
 
-            $this->pdo->query("UPDATE ".$_POST['Table']." SET Status=$status WHERE Id=".$_POST['Id']);
+            $this->pdo->query("UPDATE ".$table." SET status=$status WHERE Id=".$id);
 
-            echo $this->help_get_status($status, $_POST['Table'], $_POST['Id']);
+            echo $this->help_get_status($status, $table, $id);
             exit();
         }
-        echo 0; exit();
+        echo 0;
     }
 
-
     function ajax_active_multi() {
-        if (isset($_POST['type'])) {
-            $sql = "SHOW COLUMNS FROM ".$_POST['table'];
+        $type = isset($_POST['type']) ? intval($_POST['type']) : 0;
+        $table = isset($_POST['table']) ? trim($_POST['table']) : '';
+        
+        $ids = isset($_POST['id']) ? trim($_POST['id']) : '';
+        if (is_string($ids)) {
+            $ids = explode(',', $ids);
+        }
+        $ids = array_filter(array_map('intval', $ids));
+        $ids = implode(',', $ids);
+
+        if (in_array($type, [0, 1, 2]) && $table) {
+            $sql = "SHOW COLUMNS FROM ".$table;
             $stmt = $this->pdo->getPDO()->prepare($sql);
             $stmt->execute();
             $table_id = $stmt->fetch(PDO::FETCH_COLUMN);
 
-            $ids = @$_POST['id'];
-            $this->pdo->query("UPDATE ".$_POST['table']." SET status=".$_POST['type']." WHERE $table_id IN ($ids)");
-            echo 1; exit();
+            $this->pdo->query("UPDATE ".$table." SET status=".$type." WHERE $table_id IN ($ids)");
+            echo 1;
+            exit();
         }
-        echo 0; exit();
+        echo 0;
     }
 
 

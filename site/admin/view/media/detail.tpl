@@ -17,7 +17,7 @@
 {else}
 <div class="row">
 	<div class="col-md-3">
-		<div class="box"><img alt="" src="{$arg.img_gen}noimg.jpg" style="width: 100%"></div>
+		<div class="box"><img alt="" src="{$arg.noimg}" style="width: 100%"></div>
 	</div>
 	<div class="col-md-9">
 		<h3>Thông báo từ hệ thống admin</h3>

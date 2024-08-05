@@ -30,7 +30,7 @@ if(is_localhost()){
     define('URL_PAGE', DOMAIN.'shop/');
     define('URL_SOURCING', DOMAIN.'sourcing/');
 	define('URL_HELPCENTER', DOMAIN.'helpcenter/');
-	define('URL_BLOG', DOMAIN.'blog');
+	define('URL_BLOG', DOMAIN.'blog/');
 }else{
     define('DOMAIN_API', 'http://'.$domain_api.'/');
     define('DOMAIN', 'http://'.$domain.'/');
@@ -41,25 +41,26 @@ if(is_localhost()){
 	define('URL_HELPCENTER', DOMAIN.'helpcenter/');
 	define('URL_BLOG', 'http://blog'.$domain.'/');
 }
+
 define('ROUTER_SEARCH', 'product');
-define("URL_IMAGE", "http://static.daisan.vn/");
+define("URL_IMAGE", DOMAIN. 'site/upload/');
 define("URL_IMAGE_S3", "http://daisan-image.s3.amazonaws.com/upload/");
-define("URL_IMAGE_CDN", "http://daisan.vn/site/upload/");
-//define("URL_IMAGE_CDN", "http://static01.daisan.vn/site/upload/");
+
+// define("URL_IMAGE_CDN", "http://daisan.vn/site/upload/");
+// define("URL_IMAGE_CDN", "http://static01.daisan.vn/site/upload/");
 
 $router = [];
-$router[ROUTER_PRODUCT_CATEGORY."(:val)"] = array('mod'=>'product', 'site'=>'category', 'id'=>'$1');
-$router[ROUTER_PRODUCT_LIST."(:val)"] = array('mod'=>'product', 'site'=>'index', 'id'=>'$1');
-$router[ROUTER_EVENT."(:val)"] = array('mod'=>'event', 'site'=>'products','id'=>'$1');
+$router[ROUTER_PRODUCT_CATEGORY."(:id)"] = array('mod'=>'product', 'site'=>'category');
+$router[ROUTER_PRODUCT_LIST."(:id)"] = array('mod'=>'product', 'site'=>'index');
+$router[ROUTER_EVENT."(:id)"] = array('mod'=>'event', 'site'=>'products');
 $router[ROUTER_EVENT] = array('mod'=>'event', 'site'=>'index');
 $router[ROUTER_SEARCH] = array('mod'=>'product', 'site'=>'search');
 $router[ROUTER_NATION] = array('mod'=>'home', 'site'=>'nation');
-//$router[ROUTER_BLOG] = array('mod'=>'home','site'=>'index');
-$router[ROUTER_BLOG."(:val)"] = array('mod'=>'posts','site'=>'index','id'=>'$1');
-$router[ROUTER_BLOG_TAG."(:val)"] = array('mod'=>'posts','site'=>'tag','id'=>'$1');
+$router[ROUTER_BLOG."(:id)"] = array('mod'=>'posts','site'=>'index');
+$router[ROUTER_BLOG_TAG."(:id)"] = array('mod'=>'posts','site'=>'tag');
 $router['login'] = array('mod'=>'account', 'site'=>'login');
 $router['supplier'] = array('mod'=>'page', 'site'=>'index');
-$router[ROUTER_SUPPLIER."(:val)"] = array('mod'=>'page', 'site'=>'category', 'id'=>'$1');
+$router[ROUTER_SUPPLIER."(:id)"] = array('mod'=>'page', 'site'=>'category');
 $router['supplier/search'] = array('mod'=>'page', 'site'=>'search');
 $router['quote'] = array('mod'=>'home', 'site'=>'quote');
 $router['store/finder'] = array('mod'=>'home', 'site'=>'map');
@@ -78,75 +79,67 @@ $router['supplier/toprank'] = array('mod'=>'page', 'site'=>'toprank');
 $router['newshop'] = array('mod'=>'account', 'site'=>'createpage');
 $router['sitemap'] = array('mod'=>'home', 'site'=>'sitemap');
 
+$router['shop/(:pageId)'] = array('mod'=>'shop', 'site'=>'index');
+$router['sourcing'] = array('mod'=>'sourcing', 'site'=>'index');
+
+$router['helpcenter'] = array('mod'=>'helpcenter', 'site'=>'index');
+$router['helpcenter/detail.html'] = array('mod'=>'helpcenter', 'site'=>'detail');
+$router['helpcenter/search.html'] = array('mod'=>'helpcenter', 'site'=>'search');
+
+$router['blog/(:cid)'] = array('mod'=>'posts', 'site'=>'index');
+$router['blog/tag/(:id)'] = array('mod'=>'posts', 'site'=>'tag');
+
 $router['dangkynhaban'] = array('mod'=>'page', 'site'=>'dangkynhaban');
-$router['dangkynhaban/'] = array('mod'=>'page', 'site'=>'dangkynhaban');
 
-function router_rewrire_url(){
-	// global $domain, $router;
-	// $exp_domain = explode($domain.'/', $_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']);
-	// $url = @$exp_domain[1];
-	// unset($exp_domain);
-
+function router_rewrire_url() {
 	global $router;
-	$exp_domain = explode('/', $_SERVER['REQUEST_URI'], 2);
-	$url = @$exp_domain[1];
+
+	$url = trim($_SERVER['REQUEST_URI'], '/');
+
+	$parse_query = parse_url($url, PHP_URL_QUERY);
+	if ($parse_query) {
+        parse_str($parse_query, $param);
+        if (isset($param['mod'])) {
+			$param['site'] = $param['site']?? 'index';
+            return $param;
+        }
+    }
 	
-	if(strpos($url, 'mod=') && strpos($url, 'site=')){
-		$result = router_get_value_url($url);
-	}else{
-		$exurl = explode("?", $url);
-		$url = @$exurl[0];
-		unset($exurl);
-		if(isset($router[$url])){
-			$result = $router[$url];
-		}elseif(strpos($url, '/')){
-			$exurl = explode("/", $url);
-			foreach ($router AS $k=>$item){
-				$exk = explode("/", $k);
-				if(count($exurl)==count($exk) && $exurl[0]==$exk[0]){
-				    $result = $item;
-				    if($exk[1]=='(:val)') $result['id'] = $exurl[1];
-					if(preg_match("/[_a-z0-9-]+(\.[_a-z0-9-]+)*.htm$/i", $result['id'])){
-						$key = str_replace(".htm", "", $result['id']);
-						$result = router_get_value_url("?mod=posts&site=post_detail&id=$key");
+	$url = rtrim(explode('?', $url, 2)[0], '/');
+
+	if (isset($router[$url])) {
+		return $router[$url];
+	}
+	elseif ($url == '') {
+		return ['mod'=>'home', 'site'=>'index'];
+	}
+	else {
+		foreach ($router as $r => $item) {
+			$r = preg_replace('#\(\:([a-z0-9_]+)\)#', '(?<\1>[0-9]+)', $r);
+			if (preg_match('#^'.$r.'$#', $url, $match)) {
+				unset($match[0]);
+				foreach ($match as $k => $v) {
+					if (!is_int($k)) {
+						$item[$k] = $v;
 					}
-				    break;
-				}elseif($exurl[1]==$exk[0]){
-				    $result = $item;
-				    if($exk[1]=='(:val)') $result['id'] = $exurl[2];
-				    break;
 				}
+				return $item;
 			}
-		}elseif(preg_match("/[_a-z0-9-]+(\.[_a-z0-9-]+)*.html$/i", $url)){
-			$key = str_replace(".html", "", $url);
-			$a_key = explode('-', $key);
-			$key = end($a_key);
-			$result = router_get_value_url("?mod=product&site=detail&id=$key");
-		}else{
-			$result = router_get_value_url("?mod=home&site=index");
+		}
+
+		if (preg_match("/[a-z0-9_-]*([0-9]+)\.(html|htm)$/i", $url, $match)) {
+			$id = $match[1];
+			$type = $match[2];
+			if ($type == 'html') {
+				return ['mod'=>'product', 'site'=>'detail', 'id'=>$id];
+			}
+			else {
+				return ['mod'=>'posts', 'site'=>'post_detail', 'id'=>$id];
+			}
 		}
 	}
-	
-	return @$result;
-}
-
-
-function router_get_value_url($url){
-	list(,$url) = explode('?', $url);
-	// if(strpos($url, '/')){
-	// 	$a_url = explode('/',$url);
-	// 	$url = $a_url[1];
-	// }
-	$url = str_replace('?', '', $url);
-	$split_parameters = explode('&', $url);
-	
-	$split_complete = [];
-	for($i = 0; $i < count($split_parameters); $i++) {
-		$final_split = explode('=', $split_parameters[$i]);
-		$split_complete[$final_split[0]] = @$final_split[1];
-	}
-	
-	return $split_complete;
+	// return ['mod'=>'home', 'site'=>'error404'];
+	return ['mod'=>'home', 'site'=>'index'];
 }
 
 function simple_html_s($pre=''){

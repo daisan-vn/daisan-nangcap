@@ -107,8 +107,9 @@ function BulkAction(pos) {
         notice.get().click(function () { notice.remove(); });
     } 
     else if (bulk == 0) BulkDelete('posts', 'ajax_bulk_delete');
-    else if (bulk == 1) BulkActive('vsc_posts', 1);
-    else if (bulk == 2) BulkActive('vsc_posts', 0);
+    else if (bulk == 1) BulkActive('posts', 1);
+    else if (bulk == 2) BulkActive('posts', 0);
+    location.reload()
 }
 
 </script>

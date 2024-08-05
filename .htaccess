@@ -10,26 +10,12 @@ Header always unset X-Frame-Options
 Header set Access-Control-Allow-Origin "*"
 #Rewrite link in config file
 
-RewriteRule ^$ /site/main/ [QSA,L]
 RewriteRule ^ds_admin$ /site/admin/ [QSA,L]
 RewriteRule ^ds_admin/$ /site/admin/ [QSA,L]
 RewriteRule ^sellercenter$ /site/sellercenter/ [QSA,L]
 RewriteRule ^sellercenter/$ /site/sellercenter/ [QSA,L]
-RewriteRule ^shop/([a-zA-Z0-9._-]+)$ /site/main/?mod=shop&pageId=$1 [QSA,L]
-RewriteRule ^shop/([a-zA-Z0-9._-]+)/$ /site/main/?mod=shop&pageId=$1 [QSA,L]
-RewriteRule ^sourcing$ /site/main/?mod=sourcing [QSA,L]
-RewriteRule ^sourcing/$ /site/main/?mod=sourcing [QSA,L]
 RewriteRule ^blog$ /site/blog/ [QSA,L]
 RewriteRule ^blog/$ /site/blog/ [QSA,L]
-RewriteRule ^blog/([a-zA-Z0-9._-]+)$ /site/blog/?mod=posts&site=index&cid=$1 [QSA,L]
-RewriteRule ^blog/([a-zA-Z0-9._-]+)/$ /site/blog/?mod=posts&site=index&cid=$1 [QSA,L]
-RewriteRule ^blog/tag/([a-zA-Z0-9._-]+)$ /site/blog/?mod=posts&site=tag&id=$1 [QSA,L]
-RewriteRule ^blog/tag/([a-zA-Z0-9._-]+)/$ /site/blog/?mod=posts&site=tag&id=$1 [QSA,L]
-RewriteRule ^helpcenter$ /site/main/?mod=helpcenter [QSA,L]
-RewriteRule ^helpcenter/$ /site/main/?mod=helpcenter [QSA,L]
-RewriteRule ^helpcenter/display.html$ /site/main/?mod=helpcenter&site=detail [QSA,L]
-RewriteRule ^helpcenter/search.html$ /site/main/?mod=helpcenter&site=search [QSA,L]
-RewriteRule ^rs_image$ /library/Smarty/Image.php [QSA,L]
 RewriteRule .* /site/main/ [PT,L,QSA]
 
 # Cache files
