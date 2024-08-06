@@ -152,7 +152,7 @@ class Option extends Admin {
 		$stmt = $this->pdo->getPDO()->prepare ( $sql );
 		$stmt->execute ();
 		
-		$values = array ();
+		$values = [];
 		while ( $item = $stmt->fetch () ) {
 			$values [$item ['name']] = $item ['value'];
 		}

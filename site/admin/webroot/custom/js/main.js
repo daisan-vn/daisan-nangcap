@@ -57,7 +57,7 @@ function activeItem(Table, Id) {
 
 function setFeatured(Table, Id) {
 	loading();
-	$.post("?mod=help&site=ajax_set_featured_item", {'Table': Table, 'Id': Id}).done(function (data) {
+	$.post("?mod=help&site=ajax_set_featured_item", {'table': Table, 'id': Id}).done(function (data) {
 		if (data == '0') noticeMsg('Thông báo', 'Cập nhật thất bại.', 'error');
 		else {
 			$("#fea"+Id).html(data);

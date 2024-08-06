@@ -19,7 +19,7 @@ class Jobpost extends Pageadmin{
 	
 	function index(){
 		global $login, $lang;
-		$out = array ();
+		$out = [];
 		
 		$sql = "SELECT a.id,a.title,a.salary,a.date_finish,
 				(SELECT GROUP_CONCAT(l.Name separator ', ') FROM locations l WHERE FIND_IN_SET(l.Id, a.place)) AS places,

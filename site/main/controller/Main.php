@@ -223,7 +223,7 @@ class Main {
         $sql = "SELECT Id,Name,Prefix FROM locations a WHERE Status=1 AND Parent=0 ORDER BY Featured DESC,Sort DESC,Name";
         $stmt = $this->pdo->getPDO()->prepare ( $sql );
         $stmt->execute ();
-        $result = array ();
+        $result = [];
         while ( $item = $stmt->fetch () ) {
             $result [] = $item;
         }
@@ -242,7 +242,7 @@ class Main {
         $this->option ['seo'] = $this->get_options ( 'seo' );
         $this->option ['contact'] = $this->get_options ( 'contact' );
         $this->option ['link'] = $this->get_options ( 'link' );
-        $metadata = array ();
+        $metadata = [];
         $metadata ['title'] = $title;
         $metadata ['keyword'] = $keyword;
         $metadata ['description'] = $description;
@@ -279,7 +279,7 @@ class Main {
     
     function get_options($type = null, $use_lang = 1){
         global $lang;
-        $options = array ();
+        $options = [];
         $sql = "SELECT name,value FROM options WHERE name IS NOT NULL";
         if($use_lang == 1) $sql .= " AND lang='$lang'";
         if($type != null) $sql .= " AND type='$type'";

@@ -22,7 +22,7 @@ class Service extends Pageadmin{
 	
 	function index(){
 		global $login, $lang;
-		$out = array ();
+		$out = [];
 		
 		$sql = "SELECT s.id,s.name,s.avatar,a.description FROM pageservices a LEFT JOIN services s ON s.id=a.service_id 
 				WHERE a.page_id=".$this->page_id;
@@ -70,7 +70,7 @@ class Service extends Pageadmin{
 			exit();
 		}
 		
-		$out = array ();
+		$out = [];
 		$out['select_category'] = $this->taxonomy->get_select_taxonomy($this->cate_type, 0, 0, null, 'Chọn danh mục dịch vụ');
 		$this->smarty->assign('out', $out);
 		$this->smarty->display(LAYOUT_DEFAULT);

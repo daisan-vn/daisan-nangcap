@@ -228,7 +228,7 @@ function SaveForm(){
 				$("#UpdateFrom").modal('hide');
 				setTimeout(function(){
 					window.location.reload();
-				}, 2000);
+				}, 500);
 			}else{
 				noticeMsg('Thông báo', data.msg, 'error');
 				endloading();
@@ -245,12 +245,28 @@ function LoadDataContent(id){
 	});
 }
 
-
 function filter(){
     var key = $.trim($("#key").val());
     var url = "?mod=account&site=index";
     if(key!='') url = url + "&key=" + key;
     window.location.href = url;
+}
+
+function BulkAction(pos) {
+	PNotify.removeAll();
+	var bulk = $('select[name=bulk'+pos+']').val();
+	if (bulk == '') {
+		noticeMsg('Chọn tác vụ', 'Vui lòng chọn 1 tác vụ','info');
+	}
+	else if (bulk == 0) {
+		BulkDelete('useradmin', 'ajax_bulk_delete');
+	}
+	else if (bulk == 1) {
+		BulkActive('useradmin', 1);
+	}
+	else if (bulk == 2) {
+		BulkActive('useradmin', 0);
+	}
 }
 
 </script>

@@ -12,7 +12,7 @@ class Order extends Pageadmin{
 	
 	function index(){
 		global $login, $lang;
-		$out = array ();
+		$out = [];
 		
 		if(isset($_POST['ajax_action']) && $_POST['ajax_action']=='change_status'){
 		    $id = intval(@$_POST['id']);

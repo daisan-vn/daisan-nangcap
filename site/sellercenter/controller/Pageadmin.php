@@ -24,35 +24,60 @@ class Pageadmin {
         $this->_get = $_get;
         $this->login = $login;
         
-        $this->page_id = isset($_SESSION[SESSION_PAGEID_MANAGER]) ? $_SESSION[SESSION_PAGEID_MANAGER] : 0;
-        
+        $this->page_id = isset($_SESSION[SESSION_PAGEID_MANAGER])? $_SESSION[SESSION_PAGEID_MANAGER] : 0;
+        if ($this->page_id == 0) {
+            lib_redirect(DOMAIN);
+        }
+
         $this->profile = $this->page->get_profile($this->page_id);
-        if($_SESSION[SESSION_IS_ADMIN] != 1){
+
+        $pageuser = [];
+
+        // check là admin đăng nhập
+
+        // chỗ này có vấn đề khi kết nối đăng nhập bằng người dùng bình thường, kiểm tra lại xem
+        // mai test đăng nhập bằng người dùng bình thường
+
+        // chuẩn hóa các biến SESSION vào class Auth
+
+        if ($_SESSION[SESSION_IS_ADMIN] != 1) {
             $pageuser = $this->pdo->fetch_one("SELECT u.id,u.name,u.avatar,a.position 
                     FROM pageusers a LEFT JOIN users u ON u.id=a.user_id
                     WHERE a.user_id=$login AND a.page_id=".$this->page_id);
             if(!$pageuser && $site!='connect') lib_redirect(DOMAIN);
+
+            if ($this->profile['status'] != 1) {
+                echo 'Gian hàng bạn truy cập đã bị khóa hoặc không tồn tại.';
+                exit();
+            }
         }
-        $this->profile['position'] = @$pageuser['position'];
+
+        if ($pageuser) {
+            $pageuser['avatar'] = $this->img->get_image($this->user->get_folder_img($pageuser['id']), $pageuser['avatar']);
+        }
+        else {
+            $pageuser['avatar'] = URL_UPLOAD . 'logo/super_admin_avatar.png';
+        }
+
         $this->profile['neworders'] = $this->pdo->count_item('productorders', 'status=0 AND page_id='.$this->page_id);
         $this->profile['newcontact'] = $this->pdo->count_item('pagemessages', 'parent=0 AND status=0 AND page_id='.$this->page_id);
-        $pageuser['avatar'] = $this->img->get_image($this->user->get_folder_img($pageuser['id']), $pageuser['avatar']);
         
         $this->arg = array(
-	            'stylesheet' => DOMAIN . "site/sellercenter/webroot/",
-        		'timenow' => time(),
-	            'domain' => DOMAIN,
-                'url_location'=> $location !=0 ? $url_location : DOMAIN,
-        		'url_pageadmin' => URL_PAGEADMIN,
-        		'url_upload' => URL_UPLOAD,
-	            'thislink' => THIS_LINK,
-	            'mod' => $mod,
-	            'site' => $site,
-        		'lang' => $lang,
-        		'login' => $login,
-        		'noimg' => NO_IMG,
-            'logo' => $this->media->get_images(1),
+            'stylesheet' => DOMAIN . "site/sellercenter/webroot/",
+            'timenow' => time(),
+            'domain' => DOMAIN,
+            'url_location'=> $location !=0 ? $url_location : DOMAIN,
+            'url_pageadmin' => URL_PAGEADMIN,
+            'url_upload' => URL_UPLOAD,
+            'thislink' => THIS_LINK,
+            'mod' => $mod,
+            'site' => $site,
+            'lang' => $lang,
+            'login' => $login,
+            'noimg' => NO_IMG,
+            'logo' => '/site/upload/logo/sellercenter_logo.png',
         );
+
         $this->smarty->assign('page', $this->profile);
         $this->smarty->assign('user', $pageuser);
         $this->smarty->assign('arg', $this->arg);
@@ -78,7 +103,7 @@ class Pageadmin {
     }
     function get_options($type = null, $use_lang = 1){
         global $lang;
-        $options = array ();
+        $options = [];
         $sql = "SELECT name,value FROM options WHERE name IS NOT NULL";
         if($use_lang == 1) $sql .= " AND lang='$lang'";
         if($type != null) $sql .= " AND type='$type'";

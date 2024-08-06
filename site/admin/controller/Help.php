@@ -148,27 +148,31 @@ class Help extends Admin {
         echo 0;
     }
 
-
     function ajax_set_featured_item() {
-        if (isset($_POST['Id'])) {
-            $value = $this->pdo->fetch_one("SELECT Featured FROM ".$_POST['Table']." WHERE Id=".$_POST['Id']);
-            $Featured = 0;
-            if(@$value['Featured'] == 0) $Featured = 1;
+        $id = isset($_POST['id']) ? intval($_POST['id']) : 0;
+        $table = isset($_POST['table']) ? trim($_POST['table']) : '';
+        if ($id && $table) {
+            $value = $this->pdo->fetch_one("SELECT featured FROM ".$table." WHERE id=".$id. ' LIMIT 1');
+            $featured = 0;
+            if ($value['featured'] == 0) $featured = 1;
 
-            $this->pdo->query("UPDATE ".$_POST['Table']." SET Featured=$Featured WHERE Id=".$_POST['Id']);
-            echo $this->help_get_featured($Featured, $_POST['Table'], $_POST['Id']);
+            $this->pdo->query("UPDATE ".$table." SET featured=$featured WHERE id=".$id);
+            echo $this->help_get_featured($featured, $table, $id);
             exit();
         }
-        echo 0; exit();
+        echo 0;
     }
 
     function ajax_delete(){
-        $Table = isset($_POST['Table']) ? $_POST['Table'] : '';
-        $Id = isset($_POST['Id']) ? $_POST['Id'] : 0;
-        if($this->pdo->query("DELETE FROM $Table WHERE Id=$Id"))
-            echo "Xóa thông tin thành công.";
-        else echo "Xóa thông tin thất bại, vui lòng kiểm tra lại hệ thống.";
-        exit();
+        $id = isset($_POST['id']) ? intval($_POST['id']) : 0;
+        $table = isset($_POST['table']) ? trim($_POST['table']) : '';
+        if($table && $id) {
+            if ($this->pdo->query("DELETE FROM $table WHERE id=$id")) {
+                echo "Xóa thông tin thành công.";
+                exit();
+            }    
+        }
+        echo "Xóa thông tin thất bại, vui lòng kiểm tra lại hệ thống.";
     }
 
 

@@ -33,7 +33,7 @@
             <th class="text-center">SL sản phẩm</th>
             <th class="text-center">Sourcing</th>
             <th class="text-center">SP showcase</th>
-            <th class="text-center">Quảng cáo</th>
+            <th class="text-center">Điểm quảng cáo</th>
             <th class="text-center">SP khuyến mại</th>
             <th class="text-center">Top logo</th>
             <th class="text-center">Top sản phẩm</th>
@@ -118,7 +118,7 @@
 					<div class="col-sm-3">
 						<input type="number" class="form-control" name="numb_showcase">
 					</div>
-					<label class="col-sm-3">Quảng cáo</label>
+					<label class="col-sm-3">Điểm quảng cáo</label>
 					<div class="col-sm-3">
 						<input type="number" class="form-control" name="numb_ads">
 					</div>

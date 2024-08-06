@@ -14,8 +14,8 @@
 </div>
 <div style="margin-bottom:20px;">
     <ul class="nav nav-tabs">
-        <li {if !$page_verified}class="active"{/if}><a href="?mod=pages&site=index">{$number.not_verified} Gian hàng(Chưa xác minh)</a></li>
-        <li {if $page_verified}class="active"{/if}><a href="?mod=pages&site=index&verified=1">{$number.verified} Gian hàng(Đã xác minh)</a></li>
+        <li {if !$page_verified}class="active"{/if}><a href="?mod=pages&site=index">{$number.not_verified} Gian hàng (Chưa xác minh)</a></li>
+        <li {if $page_verified}class="active"{/if}><a href="?mod=pages&site=index&verified=1">{$number.verified} Gian hàng (Đã xác minh)</a></li>
     </ul>
 </div>
 <div class="row">
@@ -117,7 +117,7 @@
                             <i class="fa fa-pencil fa-fw"></i>
                         </button> 
                     </p>
-                    <div style="text-align: center;">{$data.package|default:'Free'}</div>
+                    <div style="text-align: center;">{$data.package|default:''}</div>
                     <div style="text-align: center;"><small>{$data.package_end}</small></div>
                 </td>
                 <td class="text-right">
@@ -350,7 +350,7 @@
         $.post('?mod=pages&site=index', data).done(function (e) {
             $("#SetPackage input[name=page_id]").val(page_id);
             var rt = JSON.parse(e);
-            console.log(rt);
+            // console.log(rt);
             $("#SetPackage select[name=package_id]").html(rt.s_package);
             $("#SetPackage input[name=endtime]").val(rt.endtime);
             $("#SetPackage").modal('show');
@@ -377,7 +377,7 @@
             noticeMsg('Message System', 'Cập nhật thông tin thành công.', 'success');
             setTimeout(function () {
                 location.reload();
-            }, 1000);
+            }, 500);
         });
     }
 

@@ -20,7 +20,7 @@ $smarty->caching = false;
 $smarty->cache_lifetime = 120000;
 
 $lang = \App::getLang();
-$login = \Auth::isLogin();
+$login = \Auth::isUserLogin();
 
 $_get = router_rewrire_url();
 $mod = isset($_get['mod']) ? $_get['mod'] : 'home';

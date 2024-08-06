@@ -20,7 +20,7 @@ $smarty->caching = false;
 $smarty->cache_lifetime = 120000;
 
 $lang = \App::getLang();
-$login = \Auth::isLogin();
+$login = \Auth::isUserLogin();
 
 if (strpos($_SERVER['HTTP_HOST'], 'blog') === 0) {
 	$_get = $_GET;

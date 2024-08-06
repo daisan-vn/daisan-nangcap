@@ -307,7 +307,7 @@ class Text {
 	 */
 	public function ascii_to_entities($str) {
 		$out = '';
-		for($i = 0, $s = strlen ( $str ) - 1, $count = 1, $temp = array (); $i <= $s; $i ++) {
+		for($i = 0, $s = strlen ( $str ) - 1, $count = 1, $temp = []; $i <= $s; $i ++) {
 			$ordinal = ord ( $str [$i] );
 			
 			if ($ordinal < 128) {
@@ -333,7 +333,7 @@ class Text {
 					
 					$out .= '&#' . $number . ';';
 					$count = 1;
-					$temp = array ();
+					$temp = [];
 				}				// If this is the last iteration, just output whatever we have
 				elseif ($i === $s) {
 					$out .= '&#' . implode ( ';', $temp ) . ';';
@@ -568,7 +568,7 @@ class Text {
 		
 		// If the current word is surrounded by {unwrap} tags we'll
 		// strip the entire chunk and replace it with a marker.
-		$unwrap = array ();
+		$unwrap = [];
 		if (preg_match_all ( '|\{unwrap\}(.+?)\{/unwrap\}|s', $str, $matches )) {
 			for($i = 0, $c = count ( $matches [0] ); $i < $c; $i ++) {
 				$unwrap [] = $matches [1] [$i];

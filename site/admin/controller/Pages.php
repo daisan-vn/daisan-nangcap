@@ -16,38 +16,34 @@ class Pages extends Admin {
         if(isset($_POST['ajax_action']) && $_POST['ajax_action']=='load_package'){
             $id = intval(@$_POST['id']);
             $result = $this->pdo->fetch_one("SELECT id,page_id,package_id,endtime FROM pagepackage WHERE page_id=$id AND endtime>='".date("Y-m-d")."'");
-            $result["s_package"] = $this->help->get_select_from_table('packages', 'id', 'name', @$result['package_id'], 'FREE');
+            $result["s_package"] = $this->help->get_select_from_table('packages', 'id', 'name', @$result['package_id'], '-- Chọn gói --');
             echo json_encode($result);
             exit();
         }elseif(isset($_POST['ajax_action']) && $_POST['ajax_action']=='save_package'){
-            $data['page_id'] = trim(@$_POST['page_id']);
-            $data['package_id'] = trim(@$_POST['package_id']);
-            $data['endtime'] = gmdate("Y-m-d", strtotime(@$_POST['endtime']) + 7*3600);
-            $data['created'] = time();
-            $sql = 'SELECT 1 FROM pagepackage WHERE page_id=';
-            if(!$this->pdo->check_exist($sql.$_POST['page_id'])){
-                $this->pdo->insert('pagepackage', $data);
-            }else  
-                $this->pdo->update('pagepackage', $data, 'page_id='.$_POST['page_id']);
-            unset($data);
-            $data['package_id'] = trim(@$_POST['package_id']);
-            $data['package_end'] = gmdate("Y-m-d", strtotime(@$_POST['endtime']) + 7*3600);
-            //get numb_ads from package_id
-            $data['score_ads'] = $this->pdo->fetch_one_fields('packages', 'numb_ads', 'id='.$data['package_id']);
-            $this->pdo->update('pages', $data, "id=".trim(@$_POST['page_id']));
-            
-            $product = $this->pdo->fetch_all("SELECT id FROM products WHERE page_id=".@$_POST['page_id']);
-            //             echo '<pre>';
-            //             var_dump($data);
-            //             echo '</pre>';
-            foreach ($product AS $item){
-                $curl_get_product = $this->curl_search_get_product($item['id']);
-                $curl_get_product['fields']['package_id'] = (int)$data['package_id'];
-                $curl_get_product['fields']['package_end'] = $data['package_end'];
-                $dataCURL_str = json_encode($curl_get_product['fields']);
-                $this->curl_search_update_index($item['id'], $dataCURL_str);
-                usleep(10000);
+            $page_id = intval($_POST['page_id'] ?? 0);
+
+            $package_id = intval($_POST['package_id'] ?? 0);
+            $package_end = empty($_POST['endtime']) ? '' : date('Y-m-d H:i', strtotime($_POST['endtime']));
+
+            $package = $this->page->set_package($page_id, $package_id, $package_end);
+
+            if ($package) {
+                $this->page->set_score_ads($page_id, $package['numb_ads']);
             }
+            else {
+                $this->page->set_score_ads($page_id, 0);
+            }
+            
+            // $product = $this->pdo->fetch_all("SELECT id FROM products WHERE page_id=".$page_id);
+            // foreach ($product AS $item){
+            //     $curl_get_product = $this->curl_search_get_product($item['id']);
+            //     $curl_get_product['fields']['package_id'] = (int)$data['package_id'];
+            //     $curl_get_product['fields']['package_end'] = $data['package_end'];
+            //     $dataCURL_str = json_encode($curl_get_product['fields']);
+            //     $this->curl_search_update_index($item['id'], $dataCURL_str);
+            //     usleep(10000);
+            // }
+
             echo 1; 
             exit();
         }elseif(isset($_POST['ajax_action']) && $_POST['ajax_action']=='load_nation'){
@@ -84,7 +80,7 @@ class Pages extends Admin {
             $page['created'] = time();
             $page['admin_id'] = $login;
             $page_id = 0;
-            //var_dump($page); exit();
+
             if($page_id = $this->pdo->insert('pages', $page)){
                 unset($page);
                 $profile = $this->pdo->fetch_one('SELECT * FROM pageprofiles WHERE page_id='.$id);
@@ -188,13 +184,12 @@ class Pages extends Admin {
         $stmt->execute();
         $result = [];
         while ($item = $stmt->fetch()) {
-            $token = md5(time());
             $item['logo'] = $this->img->get_image($this->page->get_folder_img($item['id']), $item['logo']);
             $item['nation_logo'] = (@$item['nation_id']==0)?($this->img->get_image($this->folder, '1538472307_9afdb01339ef137ea2f3fb1aa64a9024.png')):($this->img->get_image($this->folder, @$item['nation_img']));
             $item['products'] = intval(@$a_count[$item['id']]);
             $item['products_active'] = intval(@$a_count_active[$item['id']]);
             $item['url'] = $this->page->get_pageurl($item['id'], $item['page_name']);
-            $item['url_seller'] = URL_PAGEADMIN . "?mod=home&site=connect&adminId=$login&pageId=" . $item['id'] . "&token=$token";
+            $item['url_seller'] = URL_PAGEADMIN . "?mod=home&site=connect&adminId=$login&pageId=".$item['id'];
             $item['status'] = $this->help_get_status($item['status'], 'pages', $item['id']);
             $item['featured']=$this->help_get_featured($item['featured'], 'pages', $item['id']);
             $item['number_admin'] = intval($item['number_admin']);
@@ -242,7 +237,7 @@ class Pages extends Admin {
         $out['filter_keyword'] = isset($_GET['key']) ? $_GET['key'] : "";
         $out['filter_package'] = $this->help->get_select_from_array($a_package, $package_id, 'Gói dịch vụ');
         
-        $where = "a.package_id>0";
+        $where = "p.price>0";
         if($status===0) $where.=" AND a.package_end<'".date('Y-m-d')."'";
         elseif($status===1) $where.=" AND a.package_end>='".date('Y-m-d')."'";
         if($package_id!==0) $where.=" AND a.package_id=$package_id";
@@ -340,13 +335,23 @@ class Pages extends Admin {
             $data['created'] = time();
 
             if($id===0){
-                $id = $this->pdo->insert('pages', $data);
-                $content = array('id'=>$id, 'name'=>trim($_POST['name']));
+                $page_id = $this->pdo->insert('pages', $data);
+                $package = $this->page->set_package($page_id);
+                
+                if ($package) {
+                    $this->page->set_score_ads($page_id, $package['numb_ads']);
+                }
+                else {
+                    $this->page->set_score_ads($page_id, 0);
+                }
+
+                $content = array('id'=>$page_id, 'name'=> $data['name']);
                 $this->savetablechangelogs('created', 'pages', $content);
             }else{
                 $data['updated'] = time();
                 $this->pdo->update('pages', $data, 'id='.$id);
-                $content = array('id'=>$id, 'name'=>trim($_POST['name']));
+
+                $content = array('id'=>$id, 'name' => $data['name']);
                 $this->savetablechangelogs('edit', 'pages', $content);
             }
             $this->page->update_page_score($id);
@@ -642,8 +647,10 @@ class Pages extends Admin {
         $this->smarty->assign('parents', $parents);
         $this->smarty->assign('contacts', $contacts);
         $out['parent_id'] = $parent_id;
+
         // $out['select_status'] = $this->help->get_select_from_array($this->status, $status, "Trạng thái");
         // $out['select_type'] = $this->help->get_select_from_array($this->type, $type, 0);
+
         $this->smarty->assign('out', $out);
         $this->smarty->display(LAYOUT_DEFAULT);
     }
@@ -673,6 +680,8 @@ class Pages extends Admin {
             $this->pdo->query("DELETE FROM pageservicepromos WHERE page_id=$id");
             $this->pdo->query("DELETE FROM pageservicesteps WHERE page_id=$id");
             
+            $this->pdo->query("DELETE FROM pagepackage WHERE page_id=$id");
+
             $this->pdo->query("DELETE FROM pages WHERE id=$id");
             
             $content = array('id'=>$id, 'name'=>$page['name']);

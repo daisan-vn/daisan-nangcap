@@ -8,7 +8,7 @@ class Home extends Pageadmin{
 	
 	function index(){
 		global $login, $lang;
-		$out = array ();
+		$out = [];
 		
 		$stat_order = $this->pdo->fetch_one("SELECT COUNT(id) AS number FROM productorders 
                 WHERE page_id=".$this->page_id." AND DATE_FORMAT(FROM_UNIXTIME(created), '%Y')='".date("Y")."' AND DATE_FORMAT(FROM_UNIXTIME(created), '%m')='".date("m")."'");
@@ -16,6 +16,7 @@ class Home extends Pageadmin{
                 WHERE page_id=".$this->page_id." AND DATE_FORMAT(date_log, '%Y')='".date("Y")."'");
 		
 		$page = $this->profile;
+
 		$page['package'] = $page['package_id']==0?"Free":$this->pdo->fetch_one_fields('packages', 'name', "id=".$this->profile['package_id']);
 		$package = $this->pdo->fetch_one("SELECT * FROM packages WHERE id=".$page['package_id']);
 		$package['numb_showcase_used'] = $this->pdo->count_item('products', "ismain=1 AND page_id=".$this->page_id);
@@ -70,32 +71,34 @@ class Home extends Pageadmin{
 	}
 	
 	
-	function connect(){
-		global $login, $lang;
-		$out = array ();
+	function connect() {
+		// đăng nhập bằng token thì token tạo ra liên quan đến random
+		// lưu vào bẳng token và chứa các thông tin liên quan đến đăng nhập
+
+		// chuẩn hóa các biến SESSION vào class Auth
+
+		$msg = "Xảy ra lỗi truy cập, bạn không có quyền truy cập quản lý cho page này.";
 		
-		$userId = isset($_GET['userId']) ? intval($_GET['userId']) : 0;
 		$adminId = isset($_GET['adminId']) ? intval($_GET['adminId']) : 0;
+
+		$userId = isset($_GET['userId']) ? intval($_GET['userId']) : 0;
 		$pageId = isset($_GET['pageId']) ? intval($_GET['pageId']) : 0;
-		// $token = isset($_GET['token']) ? trim($_GET['token']) : null;
-		
-		if(isset($adminId) && $adminId != 0){
+
+		if (isset($_SESSION[SESSION_IS_ADMIN])) {
 			$_SESSION[SESSION_PAGEID_MANAGER] = $pageId;
-			$_SESSION[SESSION_IS_ADMIN] = 1;
 			lib_redirect(URL_PAGEADMIN);
-		}else{
-			$check = $this->pdo->fetch_one("SELECT 1 FROM pageusers WHERE user_id=$userId AND page_id=$pageId AND status=1");
-			$msg = "";
-			if(!$check){
-				unset($_SESSION[SESSION_PAGEID_MANAGER]);
-				$msg = "Xảy ra lỗi truy cập, bạn không có quyền truy cập quản lý cho page này.";
-			}else{
+		}
+		elseif (isset($_SESSION[SESSION_LOGIN_DEFAULT])) {
+			$check = $this->pdo->fetch_one("SELECT 1 FROM pageusers WHERE user_id=$userId AND page_id=$pageId AND status=1 LIMIT 1");
+			if($check){
 				$_SESSION[SESSION_PAGEID_MANAGER] = $pageId;
 				lib_redirect(URL_PAGEADMIN);
+			}else{
+				unset($_SESSION[SESSION_PAGEID_MANAGER]);
 			}
 		}
+
 		echo $msg;
-		$this->smarty->assign('out', $out);
 	}
 	
 	

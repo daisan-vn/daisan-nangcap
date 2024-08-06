@@ -1,5 +1,7 @@
 <?php
 
+define('SUPER_ADMIN', 'superadmin');
+
 define("FILE_INFO_SETTING", "../../constant/info/setting.ini");
 define("FILE_INFO_METAS", "../../constant/info/metas.json");
 
@@ -12,6 +14,26 @@ define("FILE_CONT", "../../constant/info/contents.json");
 define("FILE_CONF_CONTENT", "../../constant/conf/configuration.json");
 
 define("DEFAULT_LANGUAGE", "vi");
+
+$lib_dont_check_login = array(
+	'install',
+	'support',
+);
+
+function get_ssl_page($url) {
+	$ch = curl_init();
+	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+	curl_setopt($ch, CURLOPT_HEADER, false);
+	curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+	curl_setopt($ch, CURLOPT_URL, $url);
+	curl_setopt($ch, CURLOPT_REFERER, $url);
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+	curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+	$result = curl_exec($ch);
+	curl_close($ch);
+	return $result;
+}
 
 
 function send_mail($mail_to = [], $mail_name, $mail_subject, $mail_content) {
@@ -63,20 +85,6 @@ function lib_window_open($url){
 function lib_alert($title){
 	echo "<script> alert('".$title."'); </script>";
 }
-
-define("AC_USER", "superadmin");
-$df_pass = $_SERVER['HTTP_HOST'];
-$expass = explode(".", $df_pass);
-
-if(count($expass)==1 || count($expass)==2) $acc_pass = $expass[0];
-else $acc_pass = $expass[1];
-define("AC_PASS", md5($acc_pass));
-
-$lib_dont_check_login = array(
-	"install",
-	"support",
-	"setting"
-);
 
 function lib_arr_to_ini(array $a, array $parent = []){
 	$out = '';

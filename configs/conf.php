@@ -1,20 +1,14 @@
 <?php
-# --------------------------------- #
-# Config for website
-# Get other config and parameter to site
-# --------------------------------- #
-require_once("router.php");
-require_once("param.php");
-require_once("conn.php");
 
-$PHPSESSID = session_id();
-$ext = ".html";
+require_once('router.php');
+require_once('param.php');
+require_once('conn.php');
 
 define("THIS_LINK", get_this_link());
 
-define("URL_UPLOAD", DOMAIN.'site/upload/');
-define("DIR_UPLOAD", "../upload/");
-define("DIR_UPLOAD_S3", "upload/");
+define('URL_UPLOAD', DOMAIN. 'site/upload/');
+define('DIR_UPLOAD', __ROOT. 'site/upload/');
+define('DIR_UPLOAD_S3', 'upload/');
 
 define("SESSION_LOGIN_ADMIN", lib_build_session_name("session_login_admin"));
 define("SESSION_LOGIN_DEFAULT", lib_build_session_name("session_login_member"));
@@ -27,6 +21,7 @@ define("SESSION_IS_ADMIN", lib_build_session_name("session_is_admin"));
 define("COOKIE_LOGIN_ID", "__CookieHodineId");
 define("COOKIE_LOCATION_ID_MAIN","__CookieLocationIdMain");
 define("COOKIE_LOCATION_URL_MAIN","__CookieLocationUrlMain");
+
 /* SET DEFAULT */
 define('LAYOUT_DEFAULT', 'default.tpl');
 define('LAYOUT_DETAIL', 'detail.tpl');

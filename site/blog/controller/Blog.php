@@ -23,7 +23,7 @@ class Blog {
         $this->tax = \Lib\Dbo\Taxonomy::instance();
         $this->media = \Lib\Dbo\Media::instance();
 
-        $this->option = array ();
+        $this->option = [];
         $this->option ['contact'] = $this->get_options ( 'contact' );
         $this->option ['seo'] = $this->get_options ( 'seo' );
         $this->option ['link'] = $this->get_options ( 'link' );
@@ -207,7 +207,7 @@ class Blog {
     
     function get_options($type = null, $use_lang = 1){
     	global $lang;
-    	$options = array ();
+    	$options = [];
     	$sql = "SELECT name,value FROM options WHERE name IS NOT NULL";
     	if($use_lang == 1) $sql .= " AND lang='$lang'";
     	if($type != null) $sql .= " AND type='$type'";

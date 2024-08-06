@@ -71,13 +71,72 @@ class Page {
         $this->dir_img = "pages/";
     }
     
+    public function get_package($id) {
+        return $this->pdo->fetch_one("SELECT * FROM packages WHERE id=$id LIMIT 1");
+    }
+
+    public function get_default_package() {
+        return $this->pdo->fetch_one("SELECT * FROM packages ORDER BY price ASC LIMIT 1");
+    }
+
+    public function set_package($page_id, $package_id = 0, $package_end = '') {
+        $package = $this->get_package($package_id);
+
+        if (!$package) {
+            $package = $this->get_default_package();
+        }
+
+        if ($package) {
+            $package_id = $package['id'];
+        }
+        else {
+            $package_id = 0;
+        }
+
+        if (!$package_end) {
+            $days = 365;
+            $package_end = date('Y-m-d H:i', strtotime(date('Y-m-d')) + $days * 86400);
+        }
+
+        $this->pdo->update('pages', ['package_id' => $package_id, 'package_end' => $package_end], "id=$page_id");
+
+        if ($package) {
+            $data = [
+                'package_id' => $package_id,
+                'endtime' => $package_end,
+                'created' => time()
+            ];
+    
+            if ($this->pdo->check_exist('SELECT 1 FROM pagepackage WHERE page_id='.$page_id.' LIMIT 1')) {
+                $this->pdo->update('pagepackage', $data, 'page_id='.$page_id);
+            } else {
+                $data['page_id'] = $page_id;
+                $this->pdo->insert('pagepackage', $data);
+            }
+
+            return $package;
+        }
+        else {
+            $this->pdo->query('DELETE FROM pagepackage WHERE page_id='.$page_id);
+        }
+
+        return false;
+    }
+
+    public function set_score_ads($page_id, $score) {
+        $this->pdo->update('pages', ['score_ads' => $score], "id=".$page_id);
+    }
+
+
+    // --- kien fix ----
     
     function get_profile($page_id){
-        $result = $this->pdo->fetch_one("SELECT a.id AS pid,a.*,p.*,
+        $result = $this->pdo->fetch_one("SELECT a.id AS pid,a.status AS page_status, a.*,p.*,
                 CASE WHEN a.package_end>'".date('Y-m-d')."' THEN a.package_id ELSE 0 END AS package_id,
                 CASE WHEN a.package_end>'".date('Y-m-d')."' THEN a.score_ads ELSE 0 END AS score_ads
 				FROM pages a LEFT JOIN pageprofiles p ON a.id=p.page_id
-				WHERE a.status=1 AND (a.id='$page_id' OR a.page_name='$page_id' OR a.page_website='$page_id')");
+				WHERE (a.id='$page_id' OR a.page_name='$page_id' OR a.page_website='$page_id')");
+
         if($result){
             $page_id = $result['pid'];
             $result['folder'] = $this->get_folder_img($page_id);
@@ -97,8 +156,10 @@ class Page {
             $result['page_contact'] = DOMAIN."?mod=page&site=contact&page_id=".$result['page_id'];
             $result['a_image'] = $this->get_images($result['images'], $page_id);
         }
+
         return $result;
     }
+
     function info_page_location($page_id,$location,$lid=0){
         $sql="SELECT a.id,a.page_id,a.name,a.address,a.phone,a.email,a.province_id,b.page_name FROM pageaddress a
                 LEFT JOIN pages b ON a.page_id=b.id
@@ -168,6 +229,7 @@ class Page {
             $pages[$k]['yearexp'] = $this->get_yearexp($item['date_start']);
             $pages[$k]['pagelink'] = $this->get_all_pagelink($item['id'], @$item['page_name']);
             $pages[$k]['metas'] = json_decode($item['metas'], true);
+
 //             $a_images = explode(";", $item['images']);
 //             $pages[$k]['a_img'] = [];
 //             foreach ($a_images AS $v){
@@ -211,6 +273,7 @@ class Page {
         }
         return $pages;
     }*/
+
     function getvideo($id){
         $sql = "SELECT url_youtube FROM pageprofiles WHERE page_id=$id";
         $value = $this->pdo->fetch_one($sql);
@@ -256,7 +319,6 @@ class Page {
         }
         return $rt;
     }
-    
     
     function update_page_score($page_id){
         $score = 0;
@@ -386,8 +448,8 @@ class Page {
         return $folder;
     }
     
-    private function set_all_pages(){
-        $all_pages = array(
+    protected function set_all_pages(){
+        $this->all_pages = array(
             'home' => 'Trang chủ',
             'company_information' => 'Thông tin tổng quan',
             'company_profile' => 'Hồ sơ công ty',
@@ -400,10 +462,7 @@ class Page {
             'contact' => 'Liên hệ',
             'search' => 'Tìm kiếm'
         );
-        return $this->all_pages = $all_pages;
     }
-
-    
     
     function number_product($id)
     {

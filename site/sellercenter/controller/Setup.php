@@ -19,7 +19,7 @@ class Setup extends Pageadmin{
 	
 	function index(){
 		global $login, $lang;
-		$out = array ();
+		$out = [];
 		
 		$this->smarty->assign('out', $out);
 		$this->smarty->display(LAYOUT_DEFAULT);
@@ -28,7 +28,7 @@ class Setup extends Pageadmin{
 	
 	function name(){
 		global $login, $lang;
-		$out = array ();
+		$out = [];
 		if(isset($_POST['ajax_action']) && $_POST['ajax_action']=='save_name'){
 			$check = $this->pdo->check_exist("SELECT 1 FROM pages WHERE page_name='".trim(@$_POST['name'])."'");
 			if($check){
@@ -48,7 +48,7 @@ class Setup extends Pageadmin{
 	
 	function website(){
 		global $login, $lang;
-		$out = array ();
+		$out = [];
 	
 		$this->smarty->assign('out', $out);
 		$this->smarty->display(LAYOUT_DEFAULT);
@@ -57,7 +57,7 @@ class Setup extends Pageadmin{
 	
 	function seo(){
 		global $login, $lang;
-		$out = array ();
+		$out = [];
 	
 		if(isset($_POST['submit'])){
 			$data['meta_title'] = trim(@$_POST['meta_title']);
@@ -74,7 +74,7 @@ class Setup extends Pageadmin{
 	
 	function admin(){
 		global $login, $lang;
-		$out = array ();
+		$out = [];
 		
 		if(isset($_POST['ajax_action']) && $_POST['ajax_action']=='load_pageuser'){
 			$user_id = intval(@$_POST['id']);

@@ -25,7 +25,7 @@ class Account extends Admin{
 			exit();
 		}elseif(isset($_POST['action']) && $_POST['action']=='save_useradmin'){
 			$data["name"] = $_POST["name"];
-			$data["status"] = isset($_POST['status']) ? 1 : 0;
+			$data["status"] = empty($_POST['status']) ? 2 : 1;
 			$data["level"] = $_POST["level"];
 			$data["type"] = $_POST["type"];
 			$rt['code'] = 0;
@@ -161,31 +161,31 @@ class Account extends Admin{
 				$message = "Tài khoản không hợp lệ !";
 			}else if(!preg_match("/^[a-zA-Z0-9_*#@]{6,20}$/", $_POST['pass'], $matches)){
 				$message = "Mật khẩu không hợp lệ !";
-			}elseif ($user==AC_USER && $pass==AC_PASS){
-				$data['level'] = 6;
-				$data['status'] = 1;
-				$data['password'] = AC_PASS;
-				$check = $this->pdo->fetch_one("SELECT id FROM useradmin WHERE username='$user'");
-				if(!$check){
-					$data['username'] = AC_USER;
-					$data['name'] = "Superadmin";
-					$data['created'] = time();
-					$id = $this->pdo->insert('useradmin', $data);
-				}else {
-					$id = $check['id'];
-					$this->pdo->update('useradmin', $data, "id=$id");
+			} else {
+				if ($user==SUPER_ADMIN){
+					// kiểm tra chưa có tài khoản nào, tạo tài khoản mới superadmin
+					$check = $this->pdo->fetch_one("SELECT id FROM useradmin LIMIT 1");
+					if(!$check){
+						$data['username'] = SUPER_ADMIN;
+						$data['password'] = $pass;
+						$data['level'] = 6;
+						$data['name'] = "Super Admin";
+						$data['status'] = 1;
+						$data['created'] = time();
+						$id = $this->pdo->insert('useradmin', $data);
+					}
 				}
-				$_SESSION[SESSION_LOGIN_ADMIN] = $id;
-				lib_redirect();
-			}elseif($this->pdo->count_rows("SELECT id FROM useradmin WHERE username='$user' AND BINARY password='$pass' AND status=0") > 0){
-				$message = "Tài khoản đã bị khóa";
-			}else{
-				$result = $this->pdo->fetch_one("SELECT id FROM useradmin WHERE username='$user' AND BINARY password='$pass' AND status=1");
-				if(!$result){
-					$message = "Thông tin đăng nhập không đúng!";
-				}else {
-					$_SESSION[SESSION_LOGIN_ADMIN] = $result["id"];
-					lib_redirect();
+
+				if($this->pdo->count_rows("SELECT id FROM useradmin WHERE username='$user' AND BINARY password='$pass' AND status=0") > 0){
+					$message = "Tài khoản đã bị khóa";
+				}else{
+					$result = $this->pdo->fetch_one("SELECT id FROM useradmin WHERE username='$user' AND BINARY password='$pass' AND status=1");
+					if(!$result){
+						$message = "Thông tin đăng nhập không đúng!";
+					}else {
+						$_SESSION[SESSION_LOGIN_ADMIN] = $result["id"];
+						lib_redirect();
+					}
 				}
 			}
 		}

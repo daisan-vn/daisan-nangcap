@@ -1405,7 +1405,7 @@ class Product extends Admin {
     
     function order() {
         global $login;
-        $out = array ();
+        $out = [];
         if(isset($_POST['ajax_action']) && $_POST['ajax_action']=='change_status'){
             $id = intval(@$_POST['id']);
             $order = $this->pdo->fetch_one("SELECT status FROM productorders WHERE id=$id AND page_id=".$this->page_id);

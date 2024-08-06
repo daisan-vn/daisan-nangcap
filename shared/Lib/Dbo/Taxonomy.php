@@ -88,7 +88,7 @@ class Taxonomy {
     function get_tax_position($type = 'category', $where = null, $limit = null) {
         global $lang;
         $where = ($where == null || $where == '') ? '' : "AND " . $where;
-        $result = array ();
+        $result = [];
         
         $sql = "SELECT a.id,a.name,a.level,a.alias,a.image,a.description,m.name AS image,t.alias AS folder FROM taxonomy a
                 LEFT JOIN media m ON a.image=m.id LEFT JOIN taxonomy t ON m.taxonomy_id=t.id

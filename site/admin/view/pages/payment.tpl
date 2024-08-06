@@ -158,7 +158,7 @@ function SavePackage(){
 		noticeMsg('Message System', 'Cập nhật thông tin thành công.', 'success');
 		setTimeout(function(){
 			location.reload();
-		}, 1000);
+		}, 500);
 	});
 }
 

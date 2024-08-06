@@ -110,7 +110,7 @@ class Admin {
 
     function get_options($type = null, $use_lang = 1){
         global $lang;
-        $options = array ();
+        $options = [];
         $sql = "SELECT name,value FROM options WHERE name IS NOT NULL";
         if($use_lang == 1) $sql .= " AND lang='$lang'";
         if($type != null) $sql .= " AND type='$type'";
