@@ -216,13 +216,15 @@ function BulkActive(table, type) {
 		.done(function () {
 			endloading();
 			var mes_text = '';
+			console.log(arr);
+			console.log(type);
 			if (type == 1) {
 				$.each(arr, function (index, value) {
 					$('#stt' + value).html('<button type="button" class="btn btn-success btn-xs" title="Đổi trạng thái" onclick="activeItem(\'' + table + '\', ' + value + ');"><i class="fa fa-check fa-fw"></i></button>');
 				});
 				mes_text = 'kích hoạt';
 			}
-			else if (type == 2) {
+			else if ((type == 0) || (type == 2)) {
 				$.each(arr, function (index, value) {
 					$('#stt' + value).html('<button type="button" class="btn btn-danger btn-xs" title="Đổi trạng thái" onclick="activeItem(\'' + table + '\', ' + value + ');"><i class="fa fa-lock fa-fw"></i></button>');
 				});

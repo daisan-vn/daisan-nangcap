@@ -167,7 +167,7 @@ $(window).ready(function(){
                     $('#taxonomy_form')[0].reset();
                     $("input[name=id]").val(0);
                     $("input[name=status]").attr("checked", "checked").prop('checked', true);
-                    $('select[name=parent]').html(data.select_parent);
+                    $('select[name=parent]').html(data.select_parent).trigger('chosen:updated');
                     $('select[name=position]').val('');
                     $('input[name=name]').focus();
                 }
@@ -193,7 +193,7 @@ $(window).ready(function(){
             $("#taxonomy_form input[name=id]").val(data.id);
             $("#taxonomy_form input[name=name]").val(data.name).focus();
             $("#taxonomy_form input[name=alias]").val(data.alias);
-            $("#taxonomy_form select[name=parent]").html(data.select_parent);
+            $("#taxonomy_form select[name=parent]").html(data.select_parent).trigger('chosen:updated');
             $("#taxonomy_form select[name=position]").html(data.position);
             $("#taxonomy_form textarea[name=title]").val(data.title);
             $("#taxonomy_form textarea[name=keyword]").val(data.keyword);
@@ -257,7 +257,6 @@ $(window).ready(function(){
         else if (bulk == 2) {
             BulkActive('taxonomy', 0);
         }
-        location.reload();
     }
 
     function geticon(id) {

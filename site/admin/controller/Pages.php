@@ -189,16 +189,16 @@ class Pages extends Admin {
         $result = [];
         while ($item = $stmt->fetch()) {
             $token = md5(time());
-            $item ['logo'] = $this->img->get_image($this->page->get_folder_img($item['id']), $item['logo']);
-            $item ['nation_logo'] = (@$item['nation_id']==0)?($this->img->get_image($this->folder, '1538472307_9afdb01339ef137ea2f3fb1aa64a9024.png')):($this->img->get_image($this->folder, @$item['nation_img']));
-            $item ['products'] = intval(@$a_count[$item['id']]);
-            $item ['products_active'] = intval(@$a_count_active[$item['id']]);
-            $item ['url'] = $this->page->get_pageurl($item['id'], $item['page_name']);
+            $item['logo'] = $this->img->get_image($this->page->get_folder_img($item['id']), $item['logo']);
+            $item['nation_logo'] = (@$item['nation_id']==0)?($this->img->get_image($this->folder, '1538472307_9afdb01339ef137ea2f3fb1aa64a9024.png')):($this->img->get_image($this->folder, @$item['nation_img']));
+            $item['products'] = intval(@$a_count[$item['id']]);
+            $item['products_active'] = intval(@$a_count_active[$item['id']]);
+            $item['url'] = $this->page->get_pageurl($item['id'], $item['page_name']);
             $item['url_seller'] = URL_PAGEADMIN . "?mod=home&site=connect&adminId=$login&pageId=" . $item['id'] . "&token=$token";
-            $item ['status'] = $this->help_get_status($item ['status'], 'pages', $item['id']);
+            $item['status'] = $this->help_get_status($item['status'], 'pages', $item['id']);
             $item['featured']=$this->help_get_featured($item['featured'], 'pages', $item['id']);
-            $item ['number_admin'] = intval($item['number_admin']);
-            $item ['package_end'] = ($item['package_end']=='0000-00-00' || $item['package_end']=='1970-00-00')?null:$item['package_end'];
+            $item['number_admin'] = intval($item['number_admin']);
+            $item['package_end'] = ($item['package_end']=='0000-00-00' || $item['package_end']=='1970-00-00')?null:$item['package_end'];
             $item['all_users'] = $this->getall_users_page($item['id']);
             $result [] = $item;
         }
@@ -260,9 +260,9 @@ class Pages extends Admin {
         $result = [];
         while ($item = $stmt->fetch()) {
             $token = md5(time());
-            $item ['logo'] = $this->img->get_image($this->page->get_folder_img($item['id']), $item['logo']);
-            $item ['url'] = $this->page->get_pageurl($item['id'], $item['page_name']);
-            $item ['package_end'] = ($item['package_end']=='0000-00-00' || $item['package_end']=='1970-00-00')?null:$item['package_end'];
+            $item['logo'] = $this->img->get_image($this->page->get_folder_img($item['id']), $item['logo']);
+            $item['url'] = $this->page->get_pageurl($item['id'], $item['page_name']);
+            $item['package_end'] = ($item['package_end']=='0000-00-00' || $item['package_end']=='1970-00-00')?null:$item['package_end'];
             $item['url_seller'] = URL_PAGEADMIN . "?mod=home&site=connect&adminId=$login&pageId=" . $item['id'] . "&token=$token";
             $result [] = $item;
         }
@@ -313,26 +313,32 @@ class Pages extends Admin {
         
         if(isset($_POST['submit'])){
             $data = [];
-            $data['name'] = trim($_POST['name']);
-            $data['code'] = trim($_POST['code']);
-            $data['name_short'] = trim($_POST['name_short']);
-            $data['name_global'] = trim($_POST['name_global']);
-            $data['date_start'] = date("Y-m-d", strtotime(trim($_POST['date_start'])));
-            $data['type'] = intval($_POST['type']);
-            $data['number_mem'] = intval($_POST['number_mem']);
-            $data['taxonomy_id'] = intval($_POST['taxonomy_id']);
-            $data['province_id'] = intval($_POST['province_id']);
-            $data['district_id'] = intval($_POST['district_id']);
-            $data['wards_id'] = intval($_POST['wards_id']);
-            $data['address'] = trim($_POST['address']);
-            $data['website'] = trim($_POST['website']);
-            $data['phone'] = trim($_POST['phone']);
-            $data['email'] = trim($_POST['email']);
+            $data['name'] = trim($_POST['name'] ?? '');
+            $data['code'] = trim($_POST['code'] ?? '');
+            $data['name_short'] = trim($_POST['name_short'] ?? '');
+            $data['name_global'] = trim($_POST['name_global'] ?? '');
+
+            $date_start = trim($_POST['date_start'] ?? '');
+            if ($date_start) {
+                $data['date_start'] = date("Y-m-d", strtotime($date_start));
+            }
+
+            $data['type'] = intval($_POST['type'] ?? 0);
+            $data['number_mem'] = intval($_POST['number_mem'] ?? 5);
+            $data['taxonomy_id'] = intval($_POST['taxonomy_id'] ?? 0);
+            $data['province_id'] = intval($_POST['province_id'] ?? 0);
+            $data['district_id'] = intval($_POST['district_id'] ?? 0);
+            $data['wards_id'] = intval($_POST['wards_id'] ?? 0);
+            $data['address'] = trim($_POST['address'] ?? '');
+            $data['website'] = trim($_POST['website'] ?? '');
+            $data['phone'] = trim($_POST['phone'] ?? '');
+            $data['email'] = trim($_POST['email'] ?? '');
             $data['isphone'] = isset($_POST['isphone'])? 1 : 0;
             $data['is_verification'] = isset($_POST['is_verification'])? 1 : 0;
             $data['is_oem'] = isset($_POST['is_oem'])? 1 : 0;
             $data['admin_id'] = $login;
             $data['created'] = time();
+
             if($id===0){
                 $id = $this->pdo->insert('pages', $data);
                 $content = array('id'=>$id, 'name'=>trim($_POST['name']));
@@ -344,7 +350,9 @@ class Pages extends Admin {
                 $this->savetablechangelogs('edit', 'pages', $content);
             }
             $this->page->update_page_score($id);
+
             lib_redirect('?mod=pages&site=index');
+
         }elseif(isset($_POST['ajax_action']) && $_POST['ajax_action']=='upload_logo'){
             $upload = $this->img->upload_image_base64($this->page->get_folder_img($_POST['page_id']), @$_POST['img'], null, 200, 1);
             $rt = 0;
@@ -380,15 +388,32 @@ class Pages extends Admin {
             $page['logo_custom_img'] = URL_UPLOAD.$this->page->get_folder_img($page['id']).$page['logo_custom'];
         }
 
-        $this->smarty->assign('page', $page);
-        
         $out = [];
-        $out['type'] = $this->help->get_select_from_array($this->page->type, @$page['type']);
-        $out['taxonomy_id'] = $this->taxonomy->get_select_taxonomy('product', $page['taxonomy_id'], 0, 'a.level<2', 'Chưa chọn danh mục');
-        $out['Province'] = $this->help->get_select_location(@$page['province_id'], 0, 'Tỉnh thành phố');
-        $out['District'] = $this->help->get_select_location(@$page['district_id'], @$page['province_id'], 'Quận huyện');
-        $out['Wards'] = $this->help->get_select_location(@$page['wards_id'], @$page['district_id'], 'Phường xã');
-        $out['number_mem'] = $this->help->get_select_from_array($this->page->number_mem, @$page['number_mem']);
+
+        $out['Province'] = $this->help->get_select_location($page? $page['province_id']: 0, 0, 'Tỉnh thành phố');
+
+        if ($page) {
+            $out['type'] = $this->help->get_select_from_array($this->page->type, $page['type']);
+            $out['taxonomy_id'] = $this->taxonomy->get_select_taxonomy('product', $page['taxonomy_id'], 0, 'a.level<2', 'Chưa chọn danh mục');
+            $out['number_mem'] = $this->help->get_select_from_array($this->page->number_mem, $page['number_mem']);
+
+            $out['District'] = $this->help->get_select_location($page['district_id'], $page['province_id'], 'Quận huyện');
+            $out['Wards'] = $this->help->get_select_location($page['wards_id'], $page['district_id'], 'Phường xã');
+        }
+        else {
+            $page['isphone'] = 0;
+            $page['is_oem'] = 0;
+            $page['is_verification'] = 0;
+
+            $out['type'] = '';
+            $out['taxonomy_id'] = [];
+            $out['number_mem'] = 5;
+
+            $out['District'] = [];
+            $out['Wards'] = [];
+        }
+        
+        $this->smarty->assign('page', $page);
         $this->smarty->assign('out', $out);
         
         $this->smarty->display(LAYOUT_DEFAULT);

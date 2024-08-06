@@ -13,4 +13,4 @@ require_once 'configs/conf.php';
 require_once 'system/app.php';
 require_once 'system/user.php';
 
-require_once(__SHARED. 'Lib/Smarty/Smarty.class.php');
+require_once('system/Lib/Smarty/Smarty.class.php');

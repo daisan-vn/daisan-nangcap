@@ -259,46 +259,50 @@ class Page {
     
     
     function update_page_score($page_id){
+        $score = 0;
         $result = $this->pdo->fetch_one("SELECT a.id AS pid,a.*,p.*
 				FROM pages a LEFT JOIN pageprofiles p ON a.id=p.page_id
 				WHERE a.id='$page_id' OR a.page_name='$page_id' OR a.page_website='$page_id'");
-        $score = 0;
-        if($result['name']!=null) $score += 5;
-        if($result['code']!=null) $score += 5;
-        if($result['name_short']!=null) $score += 5;
-        if($result['name_global']!=null) $score += 5;
-        if($result['code']!=null) $score += 5;
-        if($result['wards_id']!=0) $score += 10;
-        if($result['address']!=null) $score += 5;
-        if($result['date_start']!='1970-01-01'&&$result['date_start']!='0000-00-00') $score += 5;
-        if($result['logo']!=null) $score += 5;
-        if($result['logo_custom']!=null) $score += 5;
+
+        if ($result) {
+            if($result['name']!=null) $score += 5;
+            if($result['code']!=null) $score += 5;
+            if($result['name_short']!=null) $score += 5;
+            if($result['name_global']!=null) $score += 5;
+            if($result['code']!=null) $score += 5;
+            if($result['wards_id']!=0) $score += 10;
+            if($result['address']!=null) $score += 5;
+            if($result['date_start']!='1970-01-01'&&$result['date_start']!='0000-00-00') $score += 5;
+            if($result['logo']!=null) $score += 5;
+            if($result['logo_custom']!=null) $score += 5;
+            
+            if($result['phone']!=null) $score += 2;
+            if($result['email']!=null) $score +=2;
+            if($result['website']!=null) $score += 2;
+            if($result['page_name']!=null) $score += 2;
+            if($result['number_mem']!=0) $score += 2;
+            
+            if($result['images']!=null) $score += 2;
+            if($result['description']!=null) $score += 2;
+            if($result['time_open']!=null) $score += 2;
+            if($result['revenue']!=null) $score += 2;
+            if($result['meta_title']!=null) $score += 2;
+            if($result['meta_keyword']!=null) $score += 1;
+            if($result['meta_description']!=null) $score += 1;
+            if($result['url_facebook']!=null) $score += 1;
+            if($result['url_google']!=null) $score += 1;
+            if($result['url_youtube']!=null) $score += 1;
+            
+            $supports = $this->pdo->count_item('pagesupporters', "page_id=$page_id");
+            $score += $supports>3?10:$supports*2;
+            $partners = $this->pdo->count_item('pagepartners', "page_id=$page_id");
+            $score += $partners>3?10:$partners*2;
+            
+            $data = [];
+            $data['score'] = $score;
+            $this->pdo->update("pages", $data, "id=$page_id");
+        }
         
-        if($result['phone']!=null) $score += 2;
-        if($result['email']!=null) $score +=2;
-        if($result['website']!=null) $score += 2;
-        if($result['page_name']!=null) $score += 2;
-        if($result['number_mem']!=0) $score += 2;
-        
-        if($result['images']!=null) $score += 2;
-        if($result['description']!=null) $score += 2;
-        if($result['time_open']!=null) $score += 2;
-        if($result['revenue']!=null) $score += 2;
-        if($result['meta_title']!=null) $score += 2;
-        if($result['meta_keyword']!=null) $score += 1;
-        if($result['meta_description']!=null) $score += 1;
-        if($result['url_facebook']!=null) $score += 1;
-        if($result['url_google']!=null) $score += 1;
-        if($result['url_youtube']!=null) $score += 1;
-        
-        $supports = $this->pdo->count_item('pagesupporters', "page_id=$page_id");
-        $score += $supports>3?10:$supports*2;
-        $partners = $this->pdo->count_item('pagepartners', "page_id=$page_id");
-        $score += $partners>3?10:$partners*2;
-        
-        $data = [];
-        $data['score'] = $score;
-        $this->pdo->update("pages", $data, "id=$page_id");
         return $score;
     }
     

@@ -140,7 +140,7 @@
                         title="Sao chép gian hàng">
                         <i class="fa fa-clone fa-fw"></i></button>
                     <a href="?mod=pages&site=form&id={$data.id}" class="btn btn-default btn-xs" 
-                        title="Chỉnh sửa thông tin gian hàng">
+                        title="Chỉnh sửa thông tin gian hàng" target="_blank">
                         <i class="fa fa-pencil fa-fw"></i></a>
                     <a href="?mod=pages&site=intro&id={$data.id}" class="btn btn-default btn-xs"
                         title="Thông tin giới thiệu công ty">

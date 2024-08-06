@@ -24,8 +24,6 @@ class Admin {
         $this->smarty = $smarty;
         $this->login = $login;
 
-        // lib_dump("SELECT level,permissions FROM useradmin WHERE user_id=$login");
-
         $this->arg = array(
             'stylesheet' => DOMAIN . "site/admin/webroot/",
             'today' => gmdate("d-m-Y", time() + 7 * 3600),
@@ -42,7 +40,9 @@ class Admin {
             'noimg' => NO_IMG,
             'lang' => $lang
         );
+
        // $this->check_user_permission();
+       
         $this->smarty->assign('arg', $this->arg);
         $this->smarty->assign('js_arg', json_encode($this->arg));
         $this->smarty->assign('content', $tpl);

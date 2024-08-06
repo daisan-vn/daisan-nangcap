@@ -24,11 +24,13 @@
 			<label class="col-sm-2 col-form-label">Logo đại diện</label>
 			<div class="col-sm-8">
 				<div class="row row-sm mb-3">
+				{if isset($page.logo)}
 					<div class="col-md-2">
 						<span class="border d-block" style="min-height: 110px">
-							<img src="{$page.logo_img|default:''}" id="ShowLogo" width="100%" height="110">
+							<img src="{$page.logo_img}" id="ShowLogo" width="100%" height="110">
 						</span>
 					</div>
+				{/if}
 					<div class="col-md-10">
 						<input type="file" id="UploadLogo" name="logo"> 
 						<small class="form-text text-muted"> Kích thước file tối đa 200Mb, hỗ trợ định dạng jpg, png.</small>
@@ -37,11 +39,13 @@
 				</div>
 				
 				<div class="row row-sm">
+					{if isset($page.logo_custom_img)}
 					<div class="col-md-5">
 						<span class="border d-block" style="min-height: 93px">
-							<img src="{$page.logo_custom_img|default:''}" id="ShowLogo2" width="100%" height="93">
-						</span>
-					</div>
+							<img src="{$page.logo_custom_img}" id="ShowLogo2" width="100%" height="93">
+							</span>
+						</div>
+					{/if}
 					<div class="col-md-7">
 						<input type="file" id="UploadLogo2" name="logo2"> 
 						<small class="form-text text-muted"> Kích thước file tối đa 200Mb, hỗ trợ định dạng jpg, png.</small>
@@ -156,10 +160,7 @@
 	<div class="form-group row">
 		<label class="col-sm-2 col-form-label">Hiển thị SĐT DAISAN</label>
 		<div class="col-sm-5">
-			<input class="form-check-input" type="checkbox" {if $page.isphone
-				eq 1}checked{/if}
-			name="isphone"
-				value="{$page.isphone|default:0}">
+			<input class="form-check-input" type="checkbox" name="isphone" {if $page.isphone eq 1}checked{/if} value="{$page.isphone|default:0}">
 		</div>
 	</div>
 	<div class="form-group row">

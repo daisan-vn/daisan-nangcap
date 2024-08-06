@@ -115,7 +115,7 @@ function router_rewrire_url() {
 	}
 	else {
 		foreach ($router as $r => $item) {
-			$r = preg_replace('#\(\:([a-z0-9_]+)\)#', '(?<\1>[0-9]+)', $r);
+			$r = preg_replace('#\(\:([a-zA-Z0-9_]+)\)#', '(?<\1>[0-9]+)', $r);
 			if (preg_match('#^'.$r.'$#', $url, $match)) {
 				unset($match[0]);
 				foreach ($match as $k => $v) {

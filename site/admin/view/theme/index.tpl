@@ -109,7 +109,6 @@ function BulkAction(pos) {
     else if (bulk == 0) BulkDelete('posts', 'ajax_bulk_delete');
     else if (bulk == 1) BulkActive('posts', 1);
     else if (bulk == 2) BulkActive('posts', 0);
-    location.reload()
 }
 
 </script>
