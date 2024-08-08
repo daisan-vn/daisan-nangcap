@@ -7,7 +7,6 @@ class Home extends Pageadmin{
 	
 	
 	function index(){
-		global $login, $lang;
 		$out = [];
 		
 		$stat_order = $this->pdo->fetch_one("SELECT COUNT(id) AS number FROM productorders 
@@ -39,8 +38,6 @@ class Home extends Pageadmin{
 	
 	
 	function images(){
-	    global $login, $lang;
-	    
 	    $folder = $this->page->get_folder_img_upload($this->page_id);
 	    $files = scandir($folder);
 	    unset($files[0]);
@@ -75,8 +72,6 @@ class Home extends Pageadmin{
 		// đăng nhập bằng token thì token tạo ra liên quan đến random
 		// lưu vào bẳng token và chứa các thông tin liên quan đến đăng nhập
 
-		// chuẩn hóa các biến SESSION vào class Auth
-
 		$msg = "Xảy ra lỗi truy cập, bạn không có quyền truy cập quản lý cho page này.";
 		
 		$adminId = isset($_GET['adminId']) ? intval($_GET['adminId']) : 0;
@@ -84,17 +79,17 @@ class Home extends Pageadmin{
 		$userId = isset($_GET['userId']) ? intval($_GET['userId']) : 0;
 		$pageId = isset($_GET['pageId']) ? intval($_GET['pageId']) : 0;
 
-		if (isset($_SESSION[SESSION_IS_ADMIN])) {
-			$_SESSION[SESSION_PAGEID_MANAGER] = $pageId;
+		if ($adminId && \Auth::getAdminLogin()) {
+			\Auth::setPageManager(['page_id' => $pageId, 'type' => 'admin', 'user_id' => $adminId]);
 			lib_redirect(URL_PAGEADMIN);
 		}
-		elseif (isset($_SESSION[SESSION_LOGIN_DEFAULT])) {
+		elseif ($userId && \Auth::getUserLogin()) {
 			$check = $this->pdo->fetch_one("SELECT 1 FROM pageusers WHERE user_id=$userId AND page_id=$pageId AND status=1 LIMIT 1");
-			if($check){
-				$_SESSION[SESSION_PAGEID_MANAGER] = $pageId;
+			if ($check) {
+				\Auth::setPageManager(['page_id' => $pageId, 'type' => 'user', 'user_id' => $userId]);
 				lib_redirect(URL_PAGEADMIN);
-			}else{
-				unset($_SESSION[SESSION_PAGEID_MANAGER]);
+			} else {
+				\Auth::logoutPageManager();
 			}
 		}
 
@@ -103,8 +98,6 @@ class Home extends Pageadmin{
 	
 	
 	function errorpage(){
-		global $login, $lang;
-		
 		$this->smarty->display(LAYOUT_DEFAULT);
 	}
 	

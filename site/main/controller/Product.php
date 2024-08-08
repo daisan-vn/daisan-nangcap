@@ -45,9 +45,11 @@ class Product extends Main
 
         \Service\Ads::instance()->resetDailyPoint();
 
+        $id = intval(\App::getParam('id', 0));
+
         $today = date("Y-m-d");
         $out = [];
-        $id = isset($this->_get['id']) ? $this->_get['id'] : (isset($_GET['id']) ? intval($_GET['id']) : 0);
+
         $page = isset($_GET['page']) ? intval($_GET['page']) : 1;
         $taxonomy = $this->pdo->fetch_one("SELECT id,name,level,alias FROM taxonomy WHERE type='product' AND alias='$id' OR id='$id'");
         $id = intval($taxonomy['id']);
@@ -1229,8 +1231,8 @@ class Product extends Main
     }
     function category()
     {
-        // $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
-        $id = isset($this->_get['id']) ? $this->_get['id'] : (isset($_GET['id']) ? intval($_GET['id']) : 0);
+        $id = intval(\App::getParam('id', 0));
+
         $taxonomy = $this->pdo->fetch_one("SELECT * FROM taxonomy WHERE type='product' AND alias='$id' OR id='$id'");
         $id = @$taxonomy['id'];
         $category = $this->tax->get_value($id);
@@ -1239,7 +1241,9 @@ class Product extends Main
        
         $a_category_hot = $this->tax->get_taxonomy('product', $id, null, 11);
         $this->smarty->assign('a_category_hot', $a_category_hot);
-// quang
+
+        // quang
+
         $a_slider = $this->media->get_slides($id, 6);  
         $this->smarty->assign('a_slider', $a_slider);
         
@@ -1357,11 +1361,8 @@ class Product extends Main
 
     function detail()
     {
-        $pid = isset($this->_get['id']) ? $this->_get['id'] : (isset($_GET['pid']) ? intval($_GET['pid']) : 0);
-        if (isset($this->_get['id'])) {
-            $pid = explode("-", $pid);
-            $pid = end($pid);
-        }
+        $pid = intval(\App::getParam('id', \App::getParam('pid', 0)));
+
         $category = is_array(@$this->hcache['category_view'])?$this->hcache['category_view']:[];
 
         $info = $this->pdo->fetch_one("SELECT a.*,un.name AS unit,c.id AS tax_id,c.name AS category,

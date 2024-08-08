@@ -1,7 +1,7 @@
 <div class="body-head">
 	<div class="row">
 		<div class="col-md-8">
-			<h1><i class="fa fa-bars fa-fw"></i> Quản lý danh sách gian hàng trả phí</h1>
+<h1><i class="fa fa-bars fa-fw"></i> Quản lý danh sách gian hàng {if $is_pay} trả phí{/if}</h1>
 		</div>
 	</div>
 </div>

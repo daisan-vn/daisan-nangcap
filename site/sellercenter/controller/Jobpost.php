@@ -18,7 +18,7 @@ class Jobpost extends Pageadmin{
 	
 	
 	function index(){
-		global $login, $lang;
+		global $login;
 		$out = [];
 		
 		$sql = "SELECT a.id,a.title,a.salary,a.date_finish,
@@ -44,7 +44,7 @@ class Jobpost extends Pageadmin{
 	
 	
 	function create(){
-		global $login, $lang;
+		global $login;
 		if(isset($_POST['ajax_action']) && $_POST['ajax_action']=='create_jobpost'){
 			
 			$data['title'] = trim($_POST['title']);

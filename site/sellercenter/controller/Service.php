@@ -21,7 +21,7 @@ class Service extends Pageadmin{
 	
 	
 	function index(){
-		global $login, $lang;
+		global $login;
 		$out = [];
 		
 		$sql = "SELECT s.id,s.name,s.avatar,a.description FROM pageservices a LEFT JOIN services s ON s.id=a.service_id 
@@ -44,7 +44,7 @@ class Service extends Pageadmin{
 	
 	
 	function create(){
-		global $login, $lang;
+		global $login;
 		if(isset($_POST['ajax_action']) && $_POST['ajax_action']=='create_service'){
 			$service_id = isset($_POST['service_id']) ? intval($_POST['service_id']) : 0;
 			if($service_id==0){
@@ -78,7 +78,7 @@ class Service extends Pageadmin{
 	
 	
 	function editdetail(){
-		global $login, $lang;
+		global $login;
 		$service_id = isset($_GET['ServiceId']) ? intval($_GET['ServiceId']) : 0;
 		$service = $this->pdo->fetch_one("SELECT a.*,s.name FROM pageservices a LEFT JOIN services s ON a.service_id=s.id
 				WHERE a.service_id=$service_id AND a.page_id=".$this->page_id);

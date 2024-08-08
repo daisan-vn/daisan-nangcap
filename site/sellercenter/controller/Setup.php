@@ -18,7 +18,7 @@ class Setup extends Pageadmin{
 	
 	
 	function index(){
-		global $login, $lang;
+		global $login;
 		$out = [];
 		
 		$this->smarty->assign('out', $out);
@@ -27,7 +27,7 @@ class Setup extends Pageadmin{
 
 	
 	function name(){
-		global $login, $lang;
+		global $login;
 		$out = [];
 		if(isset($_POST['ajax_action']) && $_POST['ajax_action']=='save_name'){
 			$check = $this->pdo->check_exist("SELECT 1 FROM pages WHERE page_name='".trim(@$_POST['name'])."'");
@@ -47,7 +47,7 @@ class Setup extends Pageadmin{
 	
 	
 	function website(){
-		global $login, $lang;
+		global $login;
 		$out = [];
 	
 		$this->smarty->assign('out', $out);
@@ -56,7 +56,7 @@ class Setup extends Pageadmin{
 	
 	
 	function seo(){
-		global $login, $lang;
+		global $login;
 		$out = [];
 	
 		if(isset($_POST['submit'])){
@@ -73,7 +73,7 @@ class Setup extends Pageadmin{
 	
 	
 	function admin(){
-		global $login, $lang;
+		global $login;
 		$out = [];
 		
 		if(isset($_POST['ajax_action']) && $_POST['ajax_action']=='load_pageuser'){
@@ -115,7 +115,7 @@ class Setup extends Pageadmin{
 	
 	
 	function link(){
-	    global $login, $lang;
+	    global $login;
 	    
 	    if(isset($_POST['ajax_action']) && $_POST['ajax_action']=='load_content'){
 	        $id = intval(@$_POST['id']);
@@ -165,7 +165,7 @@ class Setup extends Pageadmin{
 	
 	
 	function load_users(){
-		global $login, $lang;
+		global $login;
 		$key = isset($_POST['key']) ? trim($_POST['key']) : '';
 		$key = $key==null?"-1":$key;
 		$sql = "SELECT a.id,a.name,a.avatar FROM users a WHERE a.status=1 AND a.id<>$login

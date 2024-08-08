@@ -3,7 +3,6 @@
 ini_set('display_errors', true);
 error_reporting(E_ALL);
 
-ob_start();
 session_start();
 
 require_once '../../index.php';
@@ -19,29 +18,30 @@ $smarty->debugging = false;
 $smarty->caching = false;
 $smarty->cache_lifetime = 120000;
 
-$lang = \App::getLang();
-$login = \Auth::isUserLogin();
+$lang = \App::getUserLang();
+$login = \Auth::getUserLogin();
 
 if (strpos($_SERVER['HTTP_HOST'], 'blog') === 0) {
-	$_get = $_GET;
+	$route = $_GET;
 }
 else {
-	$_get = router_rewrire_url();
+	$route = router_rewrire_url();
 }
 
-$mod = isset($_get['mod']) ? $_get['mod'] : "home";
-$site = isset($_get['site']) ? $_get['site'] : "index";
+$mod = $route['mod'] ?? 'home';
+$site = $route['site'] ?? 'index';
+
+\App::setMod($mod);
+\App::setSite($site);
 
 $tpl = "../" . $mod . "/" . $site . ".tpl";
 $file = ucfirst($mod) . ".php";
 $class = ucfirst($mod);
 
-if(!is_file('./controller/' . $file))
-	lib_redirect(DOMAIN);
+if(!is_file('./controller/' . $file)) lib_redirect(DOMAIN);
 require_once './controller/' . $file;
 
-if(!method_exists($class, $site))
-	lib_redirect(DOMAIN);
+if(!method_exists($class, $site)) lib_redirect(DOMAIN);
+
 $use = new $class;
 $use->$site();
-ob_end_flush();

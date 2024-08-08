@@ -22,7 +22,7 @@ class Theme extends Pageadmin{
 	
 	
 	function index(){
-		global $login, $lang;
+		global $login;
 		$out = [];
 		if(isset($_POST['ajax_action']) && $_POST['ajax_action']=='active_theme'){
 			$theme = $this->pdo->fetch_one("SELECT * FROM themes WHERE id=".$_POST['id']);
@@ -55,7 +55,7 @@ class Theme extends Pageadmin{
 
 	
 	function images(){
-		global $login, $lang;
+		global $login;
 		$out = [];
 		
 		$profile = $this->pdo->fetch_one("SELECT img_sliders,img_intro,img_service,img_product,img_contact
@@ -103,7 +103,7 @@ class Theme extends Pageadmin{
 	
 	
 	function allthemes(){
-		global $login, $lang;
+		global $login;
 		
 		if(isset($_POST['ajax_action']) && $_POST['ajax_action']=='set_theme'){
 			$data['page_id'] = $this->page_id;

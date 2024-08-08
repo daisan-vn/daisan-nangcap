@@ -92,10 +92,9 @@ class Scandb extends Admin {
         $info = [];
         if(filter_var($prefix['url'], FILTER_VALIDATE_URL)){
             $info = $this->_parse_html(['url'=>$prefix['url'],'prefix'=>$prefix,'conf'=>1]);
-            // var_dump($info);
         }
         if(@$prefix['insite_check']=='' && count(@$info['text_insite'])>0) $prefix['insite_check'] = implode(',', $info['text_insite']);
-        //lib_dump($info); exit();
+
         $this->smarty->assign('info', $info);
         $this->smarty->assign('prefix', $prefix);
         $this->smarty->assign('page', $page);
@@ -112,7 +111,6 @@ class Scandb extends Admin {
         unset($data['a_links']);
         $data['a_metas'] = is_array(@$data['a_metas'])?$data['a_metas']:[];
         $this->smarty->assign('data', $data);
-        //lib_dump($data);
         $this->smarty->display(LAYOUT_NONE);
     }
     
@@ -898,7 +896,7 @@ class Scandb extends Admin {
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_POST, 1);
         if(is_array($input)) curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($input));
-        curl_setopt($curl, CURLOPT_URL, simple_html_s('parseurl#_db'));
+        curl_setopt($curl, CURLOPT_URL, scrape_product_endpoint('parseurl#_db'));
         curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);

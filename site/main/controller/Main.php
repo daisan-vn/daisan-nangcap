@@ -4,12 +4,12 @@ class Main {
     
     public $pdo, $str, $img, $api;
     public $help, $post, $tax, $media, $menu, $page, $product, $user;
-    public $smarty, $_get, $arg;
-    public $lang, $translate, $login;
+    public $smarty, $arg;
+    public $lang, $login;
     public $option, $file_tax, $file_cont, $hcache, $cache_tax;
     
     function __construct() {
-        global $mod, $site, $smarty, $lang, $_get, $login;
+        global $mod, $site, $smarty, $lang, $login;
         
         $this->smarty = $smarty;
         $this->pdo = \Lib\DB::instance();
@@ -26,7 +26,6 @@ class Main {
         $this->media = \Lib\Dbo\Media::instance();
         $this->option = [];
         $this->option['contact'] = $this->get_options('contact');
-        $this->_get = $_get;
 
         $this->hcache = isset($_COOKIE['HodineCache'])?json_decode($_COOKIE['HodineCache'], true):[];
 

@@ -105,9 +105,10 @@
 						'Action': 'set_session_login',
 						'UserId': Data.UserId
 					}).done(function (e) {
-						//console.log(e);
 						endloading();
-						location.href = url_redirect;
+						setTimeout(function() {
+							location.href = url_redirect;
+						}, 500);
 					});
 				}
 			});

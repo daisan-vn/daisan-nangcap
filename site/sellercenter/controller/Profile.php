@@ -17,7 +17,7 @@ class Profile extends Pageadmin{
 
 
 	function index(){
-		global $login, $lang;
+		global $login;
 		$out = [];
 
 		if(isset($_POST['submit'])){
@@ -73,7 +73,7 @@ class Profile extends Pageadmin{
 
 
 	function intro(){
-		global $login, $lang;
+		global $login;
 		$out = [];
 
 		$profile = $this->pdo->fetch_one("SELECT * FROM pageprofiles WHERE page_id=".$this->page_id);
@@ -137,7 +137,7 @@ class Profile extends Pageadmin{
 
 
 	function address(){
-		global $login, $lang;
+		global $login;
 		$out = [];
 		if(isset($_POST['submit'])){
 			$address_id = intval($_POST['id']);
@@ -192,7 +192,7 @@ class Profile extends Pageadmin{
 
 
 	function supporters(){
-		global $login, $lang;
+		global $login;
 		$out = [];
 
 		if(isset($_POST['SaveSupporter'])){
@@ -242,7 +242,7 @@ class Profile extends Pageadmin{
 
 
 	function partners(){
-		global $login, $lang;
+		global $login;
 		if(isset($_POST['submit'])){
 			$data['page_id'] = $this->page_id;
 			$data['partner_id'] = $_POST['partner_id'];

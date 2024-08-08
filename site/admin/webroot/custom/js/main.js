@@ -327,10 +327,3 @@ function ImgUpload(input, obj) {
 		}
 	}
 }
-function SetLocation(){
-	var location1 = $("select[name=location]").val();
-	$.post('?mod=home&site=ajax_set_location_used',{'location1':location1}).done(function(){
-		alert(location1);
-		location.reload();
-	});
-}

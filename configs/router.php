@@ -120,8 +120,11 @@ function router_rewrire_url() {
 				unset($match[0]);
 				foreach ($match as $k => $v) {
 					if (!is_int($k)) {
-						$item[$k] = $v;
+						\App::setParam($k, $v);
 					}
+				}
+				if (isset($_REQUEST['site'])) {
+					$item['site'] = $_REQUEST['site'];
 				}
 				return $item;
 			}
@@ -130,11 +133,12 @@ function router_rewrire_url() {
 		if (preg_match("/[a-z0-9_-]*([0-9]+)\.(html|htm)$/i", $url, $match)) {
 			$id = $match[1];
 			$type = $match[2];
+			\App::setParam('id', $id);
 			if ($type == 'html') {
-				return ['mod'=>'product', 'site'=>'detail', 'id'=>$id];
+				return ['mod'=>'product', 'site'=>'detail'];
 			}
 			else {
-				return ['mod'=>'posts', 'site'=>'post_detail', 'id'=>$id];
+				return ['mod'=>'posts', 'site'=>'post_detail'];
 			}
 		}
 	}
@@ -142,7 +146,7 @@ function router_rewrire_url() {
 	return ['mod'=>'home', 'site'=>'index'];
 }
 
-function simple_html_s($pre=''){
+function scrape_product_endpoint($pre=''){
     $rt = URL_API_MAIN;
     $m = 'parseurl';
     $s = '_db';

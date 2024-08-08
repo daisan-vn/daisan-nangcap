@@ -131,7 +131,7 @@ class Page {
     // --- kien fix ----
     
     function get_profile($page_id){
-        $result = $this->pdo->fetch_one("SELECT a.id AS pid,a.status AS page_status, a.*,p.*,
+        $result = $this->pdo->fetch_one("SELECT a.id AS pid, a.*,p.*,
                 CASE WHEN a.package_end>'".date('Y-m-d')."' THEN a.package_id ELSE 0 END AS package_id,
                 CASE WHEN a.package_end>'".date('Y-m-d')."' THEN a.score_ads ELSE 0 END AS score_ads
 				FROM pages a LEFT JOIN pageprofiles p ON a.id=p.page_id

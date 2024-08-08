@@ -34,8 +34,8 @@ class Event extends Main {
     }
     
     function products(){
-        $id = isset($this->_get['id']) ? $this->_get['id'] : 0;
-        $id  = explode("-",$id);
+        $id = \App::getParam('id', 0);
+        $id = explode("-",$id);
         $id = end($id);
         
         $sql_event = "SELECT a.* FROM events a WHERE a.id=$id";

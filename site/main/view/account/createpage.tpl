@@ -97,7 +97,7 @@
 					<div class="form-group margin-top-3x text-center">
 						<button type="button" onclick="CreatePage();"
 							class="btn btn-success btn-lg btn-block">
-							<i class="fa fa-fw fa-check"></i> Khởi tạo gian hàng trên hệ thống
+							<i class="fa fa-fw fa-check"></i> Khởi tạo gian hàng
 						</button>
 					</div>
 				</div>

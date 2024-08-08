@@ -57,21 +57,4 @@ class System{
         $this->smarty->assign("out",$out);
         $this->smarty->display(LAYOUT_NONE);
     }
-    function ajax_set_location_used(){
-        global $domain;
-        if(isset($_POST['location1'])){
-            $value = $this->pdo->fetch_one("SELECT Name FROM locations WHERE id=".$_POST['location1']);
-            $value['url']=$this->str->str_convert($value['Name']);
-            if($_POST['location1'] ==0){
-                unset($_COOKIE[COOKIE_LOCATION_ID_MAIN]);
-                setcookie(COOKIE_LOCATION_ID_MAIN, null, time() - 3600, "/", "." . $domain);
-                setcookie(COOKIE_LOCATION_URL_MAIN,'', time()-3600, "/", "." . $domain);
-            }else{
-                setcookie(COOKIE_LOCATION_ID_MAIN, $_POST["location1"], time() + (86400 * 7), "/", "." . $domain);
-                setcookie(COOKIE_LOCATION_URL_MAIN, DOMAIN.$value['url']."/", time() + (86400 * 7), "/", "." . $domain);
-            }
-            echo json_encode($value);
-            exit();
-        }
-    }
 }

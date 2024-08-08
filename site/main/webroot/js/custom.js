@@ -380,24 +380,6 @@ function SetMoney(obj) {
     $(obj).val(rt);
 }
 
-function SetLocation(value) {
-    var location1 = $("#Location_" + value).val();
-    // console.log(location1);
-    $.post('?mod=system&site=ajax_set_location_used', { 'location1': location1 }).done(function(e) {
-        var data = JSON.parse(e);
-        // location.reload();
-        window.location.href = data.url;
-    });
-}
-
-function SetLocationMobile(id) {
-    $.post('?mod=system&site=ajax_set_location_used', { 'location1': id }).done(function(e) {
-        var data = JSON.parse(e);
-        //location.reload();
-        window.location.href = data.url;
-    });
-}
-
 function GetSupplierLocation(id) {
     $.post('?mod=system&site=ajax_set_location_used', { 'location1': id }).done(function(e) {
         var data = JSON.parse(e);

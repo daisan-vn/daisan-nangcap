@@ -3,7 +3,6 @@
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
-ob_start();
 session_start();
 
 require_once '../../index.php';
@@ -19,17 +18,17 @@ $smarty->debugging = false;
 $smarty->caching = false;
 $smarty->cache_lifetime = 120000;
 
-if(!isset($_SESSION[SESSION_LANGUAGE_ADMIN])){
-	$_SESSION[SESSION_LANGUAGE_ADMIN] = DEFAULT_LANGUAGE;
-}
+$location = \App::getLocation();
 
-$lang = isset($_SESSION[SESSION_LANGUAGE_ADMIN]) ? $_SESSION[SESSION_LANGUAGE_ADMIN] : DEFAULT_LANGUAGE;
-$login = isset($_SESSION[SESSION_LOGIN_ADMIN]) ? intval($_SESSION[SESSION_LOGIN_ADMIN]) : 0;
+$lang = \App::getAdminLang();
+$login = \Auth::getAdminLogin();
 
-$location = isset($_SESSION[SESSION_LOCATION_ID]) ? intval($_SESSION[SESSION_LOCATION_ID]) : 0;
+$mod = $_GET['mod']?? 'home';
+$site = $_GET['site']?? 'index';
 
-$mod = isset($_GET['mod']) ? $_GET['mod'] : "home";
-$site = isset($_GET['site']) ? $_GET['site'] : "index";
+\App::setMod($mod);
+\App::setSite($site);
+
 if($login == 0 && !in_array($mod, $lib_dont_check_login)){
 	$mod = "account";
 	$site = "login";
@@ -40,6 +39,6 @@ $file = ucfirst($mod) . ".php";
 $class = ucfirst($mod);
 
 require_once './controller/' . $file;
+
 $use = new $class;
 $use->$site();
-ob_end_flush();

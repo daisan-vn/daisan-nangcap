@@ -17,7 +17,7 @@ class Service extends Admin {
 
 
 	function index() {
-		global $login, $lang;
+		global $login;
 		$out = [];
 		$status= isset($_GET['status']) ? $_GET['status'] : -1;
 		$out['filter_status']= $this->help->get_select_from_array($this->help->a_status, $status, 'Trạng thái');
@@ -54,7 +54,7 @@ class Service extends Admin {
 
 
 	function create() {
-		global $login, $lang;
+		global $login;
 		$service_id = isset($_GET['ServiceId']) ? intval($_GET['ServiceId']) : 0;
 		$service = $this->pdo->fetch_one("SELECT * FROM services WHERE id=$service_id");
 		$service['avatar'] = $this->img->get_image($this->service->get_folder_img($service_id), $service['avatar']);
@@ -96,7 +96,7 @@ class Service extends Admin {
 
 
 	function detail(){
-		global $login, $lang;
+		global $login;
 		$PostId = isset($_GET['Id']) ? intval($_GET['Id']) : 0;
 		$post = $this->pdo->fetch_one("SELECT a.*,
 				(SELECT name FROM vsc_users WHERE a.user_id=user_id) AS username,

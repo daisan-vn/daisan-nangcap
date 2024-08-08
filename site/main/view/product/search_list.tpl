@@ -489,14 +489,6 @@
                             </div>
                             {/if}
                         </div>
-                        <div class="col-md-3">
-                            <div class="d-none d-sm-block">
-                                <!-- Daisan Ads - Ad Display Code -->
-                                <div id="adm-container-25"></div>
-                                <script data-cfasync="false" async type="text/javascript" src="//daisanads.com/display/items.php?25&2&300&600&4&0&0"></script>
-                                <!-- Daisan Ads - Ad Display Code -->
-                            </div>
-                        </div>
                     </div>
 
                 </div>

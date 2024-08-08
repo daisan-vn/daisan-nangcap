@@ -25,7 +25,6 @@
 						<li><a href="#"><i class="fa fa-user fa-fw"></i> Tài khoản</a></li>
                         <li><a href="javascript:void(0);" data-toggle="modal" data-target="#PassModal"><i class="fa fa-unlock-alt fa-fw"></i> Đổi mật khẩu</a></li>
 						<li><a href="#" data-toggle="modal" data-target="#ChangeLanguage"><i class="fa fa-language fa-fw"></i> Ngôn ngữ</a></li>
-						<li><a href="#" data-toggle="modal" data-target="#ChangeLocation"><i class="fa fa-language fa-fw"></i> Khu vực</a></li>
 						<li><a href="?mod=account&site=logout"><i class="fa fa-sign-out fa-fw"></i> Đăng xuất</a></li>
 					</ul>
 				</li>
@@ -51,27 +50,6 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Change Language Modal -->
-<div class="modal fade" id="ChangeLocation">
-    <div class="modal-dialog modal-sm">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
-                <h4 class="modal-title" id="myModalLabel">Lựa chọn khu vực quản trị</h4>
-            </div>
-            <div class="modal-body">
-            	<select class="form-control" name="location">
-            	{$s_location}
-            	</select>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
-                <button type="button" class="btn btn-success" onclick="SetLocation();">Lưu thông tin</button>
             </div>
         </div>
     </div>

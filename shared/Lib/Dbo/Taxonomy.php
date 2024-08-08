@@ -42,7 +42,7 @@ class Taxonomy {
     
     
     function get_taxonomy($type='category', $parent=0, $where=null, $limit=null, $sub=0, $image=1, $sup=0) {
-        global $lang, $url_location;
+        global $lang;
         $where = ($where==null||$where=='') ? '' : "AND ".$where;
         $result = [];
         
@@ -56,7 +56,6 @@ class Taxonomy {
         $stmt->execute();
         while ($item = $stmt->fetch()) {
             $item['url'] = $this->get_url($type, $item['id'], $item['alias'], $item['level']);
-            //$item['url'] = $this->get_url($url_location, $type, $item['id'], $item['alias'], $item['level']);
            // if($type=='category')  $item['url'] = "?mod=posts&site=index&cid=".$item['id'];
            if($sup==1) $item['url'] = $this->get_url('supplier', $item['id'], $item['alias'], $item['level']); 
            if($image==1){
@@ -72,19 +71,16 @@ class Taxonomy {
     }
     
     function get_tax_keyword($id){
-        global $url_location;
         $tax_key = $this->pdo->fetch_one("SELECT keyword FROM taxonomy WHERE id=$id");
-        $a_keyword = explode(',', $tax_key['keyword']);
+        $a_keyword = array_map('trim', explode(',', $tax_key['keyword']));
         $result = [];
-        if (count($a_keyword) > 0) {
-            foreach ($a_keyword as $k => $item) {
-                $result[$k]['keyword'] =$item;
-                $result[$k]['url'] ="product?k=".str_replace(" ","+", trim($item))."&t=0";
-                if($location!=0) $result[$k]['url']=$url_location.$result[$k]['url'] ;
-            }
+        foreach ($a_keyword as $k => $item) {
+            $result[$k]['keyword'] = $item;
+            $result[$k]['url'] = "product?k=".str_replace(" ","+", $item);
         }
         return $result;
     }
+
     function get_tax_position($type = 'category', $where = null, $limit = null) {
         global $lang;
         $where = ($where == null || $where == '') ? '' : "AND " . $where;

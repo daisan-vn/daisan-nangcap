@@ -48,8 +48,9 @@
 									</p>
 									<p>Quản trị: {$data.users|default:''}</p>
 									<p class="mb-0 mt-3">
-										<a class="btn btn-contact-o rounded-pill btn-sm" href="{$data.url_admin}" style="border-color: #9c9c9c"
-											target="_blank"><i class="fa fa-cog"></i> Vào trang quản lý</a>
+										<a class="btn btn-contact-o rounded-pill btn-sm" href="{$data.url_admin}" style="border-color: #9c9c9c">
+											<i class="fa fa-cog"></i> Vào trang quản lý
+										</a>
 									</p>
 								</div>
 							</div>
@@ -64,7 +65,7 @@
 				<div class="card">
 					<div class="card-body">
 						<h3 class="mb-4">Đăng ký gian hàng để cùng bán trên Daisan</h3>
-						<a href="?mod=account&site=createpage" class="btn btn-lg btn-success btn-block">Đăng Ký Gian Hàng Ngay</a>
+						<a href="?mod=account&site=createpage" class="btn btn-lg btn-success btn-block">Đăng Ký Gian Hàng</a>
 					</div>
 				</div>
 			</div>

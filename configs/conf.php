@@ -19,8 +19,6 @@ define("SESSION_LANGUAGE_DEFAULT", lib_build_session_name("default_language"));
 define("SESSION_PRODUCTCART", lib_build_session_name("session_hodine_product_cart"));
 define("SESSION_IS_ADMIN", lib_build_session_name("session_is_admin"));
 define("COOKIE_LOGIN_ID", "__CookieHodineId");
-define("COOKIE_LOCATION_ID_MAIN","__CookieLocationIdMain");
-define("COOKIE_LOCATION_URL_MAIN","__CookieLocationUrlMain");
 
 /* SET DEFAULT */
 define('LAYOUT_DEFAULT', 'default.tpl');

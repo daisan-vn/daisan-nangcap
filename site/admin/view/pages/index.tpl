@@ -463,7 +463,7 @@
                 noticeMsg('System Message', rt.msg, 'success');
                 setTimeout(function () {
                     location.reload();
-                }, 200);
+                }, 500);
             }
         });
 

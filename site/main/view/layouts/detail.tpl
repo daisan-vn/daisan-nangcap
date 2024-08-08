@@ -117,16 +117,18 @@
         {include file=$content}
         <div class="clearfix"></div>
     </div>
-    {include file='../includes/footer.tpl'} {include file='../includes/hmenu.tpl'}
+    {include file='../includes/footer.tpl'}
+    {include file='../includes/hmenu.tpl'}
+
+{literal}
+    
     <script>
-        
         $(document).ready(function() {
             var lazyloadImages;
 
             if ("IntersectionObserver" in window) {
                 lazyloadImages = document.querySelectorAll('img[loading="lazy"]');
                 var imageObserver = new IntersectionObserver(function(entries, observer) {
-                    console.log(observer);
                     entries.forEach(function(entry) {
                         if (entry.isIntersecting) {
                             var image = entry.target;
@@ -175,6 +177,7 @@
             }
         })
     </script>
+{/literal}
 </body>
 
 </html>

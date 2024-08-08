@@ -4,11 +4,11 @@ class Blog {
 
     public $pdo, $str, $img;
     public $help, $post, $tax, $media, $menu, $page, $product, $user;
-    public $smarty, $_get, $arg;
-    public $lang, $translate;
+    public $smarty, $arg;
+    public $lang;
 
     function __construct() {
-        global $tpl, $mod, $site, $smarty, $login, $reg, $lang, $_get;
+        global $tpl, $mod, $site, $smarty, $login, $reg, $lang;
 
         $this->smarty = $smarty;
         $this->pdo = \Lib\DB::instance();
@@ -27,7 +27,6 @@ class Blog {
         $this->option ['contact'] = $this->get_options ( 'contact' );
         $this->option ['seo'] = $this->get_options ( 'seo' );
         $this->option ['link'] = $this->get_options ( 'link' );
-        $this->_get = $_get;
 
         $this->hcache = isset($_COOKIE['HodineCache'])?json_decode($_COOKIE['HodineCache'], true):[];
         if($login!=0 && $this->hcache['user']==null){
@@ -180,21 +179,6 @@ class Blog {
         }
         return $type;
     }
-//     function get_breadcrumb($type='category', $post_id=0, $taxonomy_id=0, $custom=null){
-//         $str = "<li class='breadcrumb-item'/><a href='./' title='Trang chủ'>".@$this->translate['home']."</a></li>";
-//         if($type=='category' || $type=='product_cate'){
-//             $str .= $this->tax->get_breadcrumb($type, $taxonomy_id, $this->translate);
-//         }else if($type==null && $custom!=null){
-//             $str .= "<li class='breadcrumb-item'>$custom</li>";
-//         }
-//         if($post_id!=0){
-//             if($type=='category')
-//                 $str .= $this->post->get_breadcrumb($post_id);
-//                 elseif ($type=='product_cate')
-//                 $str .= $this->product->get_breadcrumb($post_id);
-//         }
-//         $this->smarty->assign('breadcrumb', $str);
-//     }
    
     function get_breadcrumb($taxonomy_id){
         $str = "<ol class=\"breadcrumb\">";

@@ -7,7 +7,6 @@ class Product extends Admin {
         $this->product = \Lib\Dbo\Product::instance();
     }
     
-    
     function index() {
         global $login;
         ini_set('memory_limit', '-1');
@@ -67,7 +66,7 @@ class Product extends Admin {
             $sql .= " HAVING $values > 0";
             $sql .= " ORDER BY $values DESC";
         }
-//         var_dump($sql);
+
         //$number = $this->pdo->count_rows($sql);
         $paging = new \Lib\Core\Pagination($this->pdo->count_item('products', $where), 50);
 //         $paging = new \Lib\Core\Pagination($number, 20);
@@ -77,13 +76,12 @@ class Product extends Admin {
         $result = [];
         
         while ($item = $stmt->fetch()) {
-            $token = md5(time());
             $item['a_img'] = $this->product->get_images($item['images'], $item['page_id']);
             $item['avatar'] = @$item['a_img'][0];
             if(strtotime($item['promo_date'].' 23:59:59')-time() < 0) $item['promo'] = 0;
             $item['url']=$this->product->get_url($item['id'], $this->string->str_convert($item['name']));
             $item['page_url'] = $this->page->get_pageurl($item['page_id'], $item['page_name']);
-            $item['url_seller'] = URL_PAGEADMIN . "?mod=home&site=connect&adminId=$login&pageId=" . $item['page_id'] . "&token=$token";
+            $item['url_seller'] = URL_PAGEADMIN . "?mod=home&site=connect&adminId=".$login."&pageId=".$item['page_id'];
             $item['status'] = $this->help_get_status($item ['status'], 'products', $item['id']);
             $item['featured'] = $this->help_get_featured($item['featured'], 'products', $item['id']);
             $result[] = $item;
@@ -1462,11 +1460,9 @@ class Product extends Admin {
         
         $result = $this->pdo->fetch_all($sql);
         foreach ($result AS $k=>$item){
-            $token = md5(time());
-            $result[$k]['url_seller'] = URL_PAGEADMIN . "?mod=home&site=connect&adminId=$login&pageId=" . $item['page_id'] . "&token=$token";
+            $result[$k]['url_seller'] = URL_PAGEADMIN . "?mod=home&site=connect&adminId=".$login."&pageId=".$item['page_id'];
             $result[$k]['code'] = "#OID".$item['page_id']."-".$item['id'];
             $result[$k]['status_btn'] = $this->get_status_btn($item['id'], $item['status']);
-            
         }
         $this->smarty->assign('result', $result);
         
@@ -1490,7 +1486,7 @@ class Product extends Admin {
                 FROM productorderitems a LEFT JOIN products b ON b.id=a.product_id
                 WHERE a.order_id=".$id);
         $this->smarty->assign('detail', $detail);
-        //lib_dump($order);
+
         $this->smarty->display(LAYOUT_NONE);
     }
     

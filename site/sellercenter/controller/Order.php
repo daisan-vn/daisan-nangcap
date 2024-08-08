@@ -11,7 +11,7 @@ class Order extends Pageadmin{
 	
 	
 	function index(){
-		global $login, $lang;
+		global $login;
 		$out = [];
 		
 		if(isset($_POST['ajax_action']) && $_POST['ajax_action']=='change_status'){

@@ -1,9 +1,3 @@
-<div class="text-center">
-    <!-- Daisan Ads - Ad Display Code -->
-    <div id="adm-container-17"></div>
-    <script data-cfasync="false" async type="text/javascript" src="//daisanads.com/display/items.php?17&2&728&90&1&0&0"></script>
-    <!-- Daisan Ads - Ad Display Code -->
-</div>
 <div id="search_buttom">
     <a href="javascript:void(0);">
         <i class="fa fa-search"></i>

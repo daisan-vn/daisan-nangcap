@@ -350,13 +350,6 @@
         <div class="container">
             <div class="row">
                 <div class="col-xl-9">
-                    {if $is_mobile}
-                    <div class="mb-3">
-                        <div id="adm-container-23"></div>
-                        <script data-cfasync="false" async type="text/javascript" src="//daisanads.com/display/items.php?23&2&300&250&4&0&0"></script>
-                        <!-- Daisan Ads - Ad Display Code -->
-                    </div>
-                    {/if}
                     <div class="detail__info-pRecommend">
                         <h2>Gợi ý cho bạn</h2>
                         <div class="owl-carousel owl-theme owl-detailRecommendProducts">
@@ -642,15 +635,6 @@
 							{/foreach}
 						</div>
 					</div> -->
-                </div>
-                <div class="col-xl-3">
-                    <div class="d-none d-sm-block">
-                        <!-- Daisan Ads - Ad Display Code -->
-                        <div id="adm-container-25"></div>
-                        <script data-cfasync="false" async type="text/javascript" src="//daisanads.com/display/items.php?25&2&300&600&4&0&0"></script>
-                        <!-- Daisan Ads - Ad Display Code -->
-                    </div>
-                    <div class="product__detail-ads"></div>
                 </div>
             </div>
             <div class="breadcrumb-mobile mb-3 d-block d-sm-none">

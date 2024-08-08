@@ -185,15 +185,14 @@ class Account extends Main
 				FROM pageusers b LEFT JOIN pages a ON a.id=b.page_id LEFT JOIN packages c ON a.package_id=c.id
 				WHERE $where
 				ORDER BY a.id DESC";
+
         $paging = new \Lib\Core\Pagination($this->pdo->count_item('pageusers', 'user_id=' . $login), 10);
         $sql = $paging->get_sql_limit($sql);
 
         $pages = $this->pdo->fetch_all($sql);
         $a_page_id = [];
         foreach ($pages as $k => $item) {
-            $token = md5(time());
-            $pages[$k]['url_admin'] = URL_PAGEADMIN . "?mod=home&site=connect&userId=$login&pageId=" . $item['id'] . "&token=$token";
-            // $pages[$k]['url_admin'] = $this->arg['url_seller'].$this->arg['src'].'/'.$item['page_name'].'/';
+            $pages[$k]['url_admin'] = URL_PAGEADMIN . "?mod=home&site=connect&userId=".$login."&pageId=".$item['id'];
             $pages[$k]['url_page'] = $this->page->get_pageurl($item['id'], $item['page_name']);
             $pages[$k]['logo'] = $this->img->get_image($this->page->get_folder_img($item['id']), $item['logo']);
             $pages[$k]['position'] = $this->user->admin_position[$item['position']];
@@ -614,13 +613,13 @@ class Account extends Main
     function register()
     {
         if(isset($_POST['action']) && $_POST['action'] == 'ajax_register') {
-            $Name = trim($_POST['Name']);
-            $Email = trim($_POST['Email']);
-            $Password = trim($_POST['Password']);
-            $RePass = trim($_POST['RePass']);
+            $Name = trim($_POST['Name']?? '');
+            $Email = trim($_POST['Email']?? '');
+            $Password = trim($_POST['Password']?? '');
+            $RePass = trim($_POST['RePass']?? '');
             $Rt = [];
             $Rt['Code'] = 0;
-            $Rt['Msg'] = null;
+            $Rt['Msg'] = '';
             if ($Name == ''){
                 $Rt['Msg'] = "Không được bỏ trống thông tin họ tên.";
             }elseif (!filter_var($Email, FILTER_VALIDATE_EMAIL)){
@@ -629,7 +628,7 @@ class Account extends Main
                 $Rt['Msg'] = "Mật khẩu không hợp lệ, vui lòng nhập mật khẩu tối thiểu 6 ký tự chữ và số.";
             }elseif ($RePass != $Password) {
                 $Rt['Msg'] = "Mật khẩu xác nhận không chính xác, vui lòng nhập lại.";
-            }elseif ($this->pdo->check_exist("SELECT 1 FROM users WHERE email='$Email'")) {
+            }elseif ($this->pdo->check_exist("SELECT 1 FROM users WHERE email='$Email' LIMIT 1")) {
                 $Rt['Msg'] = "Tài khoản đã tồn tại trên hệ thống, vui lòng chọn tài khoản khác.";
             }else {
                 $data = [];
@@ -638,8 +637,9 @@ class Account extends Main
                 $data['password'] = md5($Password);
                 $data['created'] = time();
                 $data['status'] = 0;
+
                 if($UserId = $this->pdo->insert('users', $data)){
-                    ##Gửi email
+                    // -- Gửi email
                     $a_mail_bcc = array('nhamphongdaijsc@gmail.com');
                     $a_mail_bcc[] = $data['email'];
                     $mail_title = "Kích hoạt tài khoản ".$data['name']." trên Daisan.vn";
@@ -650,7 +650,10 @@ class Account extends Main
                     );
                     $mail_content = get_ssl_page(DOMAIN.'?mod=account&site=set_mail_content_create_account&id='.$UserId);
                     send_mail($mail_to,"Kích hoạt Daisan",$mail_title,$mail_content);
+                    // -- end gửi mail
+
                 //    setcookie(COOKIE_LOGIN_ID, $UserId, time() + (86400 * 30));
+
                     $Rt['Code'] = 1;
                     $Rt['Msg'] = "Đăng ký tài khoản thành công.";
                 }
@@ -780,6 +783,5 @@ class Account extends Main
         
         unset($_SESSION[SESSION_LOGIN_DEFAULT]);
         lib_redirect(DOMAIN);
-        // $this->smarty->display(LAYOUT_DEFAULT);
     }
 }

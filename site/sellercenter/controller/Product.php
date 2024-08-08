@@ -16,7 +16,7 @@ class Product extends Pageadmin
     
     function index()
     {
-        global $login, $lang;
+        global $login;
         
         $out = [];
         if (isset($_POST['ajax_action']) && $_POST['ajax_action'] == 'copy_product') {
@@ -104,9 +104,7 @@ class Product extends Pageadmin
         $out['select_category'] = $this->help->get_select_from_array($a_category, $category, "Chọn danh mục");
         $out['select_status'] = $this->help->get_select_from_array($this->product->status, $status, "Chọn trạng thái");
         $out['key'] = $key;
-        //        echo '<pre>';
-        //        print_r($product_id_arr);
-        //        echo '</pre>';die;
+
         $this->smarty->assign('product_id_arr', $product_id_arr);
         $this->smarty->assign('out', $out);
         $this->smarty->display(LAYOUT_DEFAULT);
@@ -114,7 +112,7 @@ class Product extends Pageadmin
     
     function odooproduct()
     {
-        global $login, $lang;
+        global $login;
         $out = [];
         
         $key = isset($_GET['key']) ? $_GET['key'] : null;
@@ -149,7 +147,7 @@ class Product extends Pageadmin
     }
     function mains()
     {
-        global $login, $lang;
+        global $login;
         
         if (isset($_POST['ajax_action']) && $_POST['ajax_action'] == 'push_top_product') {
             $id = intval(@$_POST['id']);
@@ -287,7 +285,7 @@ class Product extends Pageadmin
         $this->smarty->display(LAYOUT_DEFAULT);
     }
     function imports(){
-        global $login, $lang;
+        global $login;
         $sql = "SELECT a.id,a.name,a.images,a.status,
 				(SELECT t.name FROM taxonomy t WHERE t.id=a.taxonomy_id) AS category,
 				(SELECT p.price FROM productprices p WHERE a.id=p.product_id ORDER BY p.price LIMIT 1) AS price
@@ -307,7 +305,7 @@ class Product extends Pageadmin
         $this->smarty->display(LAYOUT_DEFAULT);
     }
     function wholesaler(){
-        global $login, $lang;
+        global $login;
         $sql = "SELECT a.id,a.name,a.images,a.status,
 				(SELECT t.name FROM taxonomy t WHERE t.id=a.taxonomy_id) AS category,
 				(SELECT p.price FROM productprices p WHERE a.id=p.product_id ORDER BY p.price LIMIT 1) AS price
@@ -329,9 +327,8 @@ class Product extends Pageadmin
     
     function ads()
     {
-        global $login, $lang;
+        global $login;
         $page_id = $this->page_id;
-        //var_dump($this->pdo->count_rows("SELECT 1 FROM keyads WHERE page_id=$page_id AND status<>2 AND DATE_FORMAT(started, '%Y-%m')='".date("Y-m")."'"));
         
         if (isset($_POST['ajax_action']) && $_POST['ajax_action'] == 'save_form') {
             $id = intval(@$_POST['id']);
@@ -410,13 +407,13 @@ class Product extends Pageadmin
     
     function select_prod()
     {
-        global $login, $lang;
+        global $login;
         $this->smarty->display(LAYOUT_DEFAULT);
     }
     
     function create()
     {
-        global $login, $lang;
+        global $login;
         if (isset($_POST['ajax_action']) && $_POST['ajax_action'] == 'create_product') {
             $taxonomy_id = intval(@$_POST['taxonomy_id']);
             $id = intval(@$_POST['id']);
@@ -512,7 +509,7 @@ class Product extends Pageadmin
     
     /*
      function editdetail(){
-     global $login, $lang;
+     global $login;
      $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
      $product = $this->pdo->fetch_one("SELECT a.* FROM products a WHERE a.id=$id AND a.page_id=".$this->page_id);
      $product['folder'] = URL_UPLOAD.$this->product->get_folder_img($id);
@@ -765,16 +762,7 @@ class Product extends Pageadmin
                 }
             }
             
-            // echo "<pre>";
-            // print_r($attr_data);
-            // echo "</pre>";
-            
             $attribute_contents = json_encode($attr_data, JSON_UNESCAPED_UNICODE);
-            // echo "<pre>";
-            // print_r($_POST);
-            // echo "<pre>";
-            // die();
-            // attribute_contents - end
             
             $data['name'] = trim(@$_POST['name']);
             $data['code'] = trim(@$_POST['code']);
@@ -974,9 +962,6 @@ class Product extends Pageadmin
         $folder = URL_UPLOAD . "attribute/";
         $json_keywords = @file_get_contents(FILE_KEYWORDS);
         
-        // echo "<pre>";
-        // print_r($product);
-        // echo "</pre>";
         $this->smarty->assign('folder', $folder);
         $this->smarty->assign('dataAttribute', $dataAttribute);
         $this->smarty->assign('product_contents', $product_contents);
@@ -1015,7 +1000,7 @@ class Product extends Pageadmin
     
     function load_products()
     {
-        global $login, $lang;
+        global $login;
         $key = isset($_POST['key']) ? trim($_POST['key']) : '';
         $key = $key == null ? "-1" : $key;
         $sql = "SELECT a.id,a.name,a.images,a.status,a.ismain,a.views,a.score,

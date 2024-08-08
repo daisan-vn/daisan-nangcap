@@ -5,11 +5,11 @@ class Shop extends Main {
 	private $profile, $shop_id,$is_phone;
     
 	function __construct() {
-		parent::__construct ();
+		parent::__construct();
 		
-		$pageId = isset($_GET['pageId']) ? trim($_GET['pageId']) : null;
+		$pageId = intval(\App::getParam('pageId', 0));
 		$this->profile = $this->page->get_profile($pageId);
-		// lib_dump($this->profile);
+
 		$this->shop_id = $this->profile['pid'];
 		$this->is_phone = $this->profile['isphone'];
 		$this->smarty->assign('profile', $this->profile);
@@ -27,10 +27,9 @@ class Shop extends Main {
 				$a_sliders_show[] = $this->img->get_image($this->page->get_folder_img($this->shop_id), $item);
 		}
 		$this->smarty->assign('a_home_sliders_show', $a_sliders_show);
-		// echo json_encode($a_sliders_show);
                             
 		$product_category = $this->tax->get_product_category_ofpage($this->shop_id);
-		//lib_dump($product_category);
+
 		$a_category = [];
 		foreach ($product_category AS $k=>$v){
 		    if($k<=3){
@@ -39,7 +38,7 @@ class Shop extends Main {
 		    }
 		}
 		$this->smarty->assign ('a_category', $a_category);
-		// lib_dump($a_category);
+
 		$a_home_product_main = $this->product->get_list($this->shop_id,0,'a.ismain=1',8);
 		$this->smarty->assign ('a_home_product_main', $a_home_product_main);
 		

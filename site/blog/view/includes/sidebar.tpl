@@ -1,9 +1,3 @@
-<div class="banner ">
-    <!-- Daisan Ads - Ad Display Code -->
-    <div id="adm-container-23"></div>
-    <script data-cfasync="false" async type="text/javascript" src="//daisanads.com/display/items.php?23&2&300&250&4&0&0"></script>
-    <!-- Daisan Ads - Ad Display Code -->
-</div>
 {if $tags}
 <div class="home-tag-block clearfix ">
     <div class="block-head d-flex justify-content-between align-items-center ">
@@ -40,12 +34,7 @@
     </ul>
 </div>
 {/if}
-<div class="d-none d-sm-block">
-    <!-- Daisan Ads - Ad Display Code -->
-    <div id="adm-container-25"></div>
-    <script data-cfasync="false" async type="text/javascript" src="//daisanads.com/display/items.php?25&2&300&600&4&0&0"></script>
-    <!-- Daisan Ads - Ad Display Code -->
-</div>
+
 <!--
 <div class="home-product-block clearfix ">
     <div class="block-head d-flex justify-content-between ">
@@ -164,8 +153,6 @@
                 <a href="{$v.url}" rel="nofollow " target="_blank "><img src="{$v.avatar}"></a>
                 <div class="slidenews__item ">
                     <a href="{$v.url}"><span>{$v.title}</span></a>
-                    <!--<a href="https://www.thegioididong.com/game-app/3-ung-dung-chup-anh-raw-tren-dien-thoai-iphone-1254860 "><span>3
-							ứng dụng chụp ảnh RAW trên điện thoại iPhone</span></a>-->
                 </div>
             </div>
             {/foreach}
@@ -175,9 +162,3 @@
     </div>
 </div>
 {/if}
-<div class="d-none d-sm-block">
-    <!-- Daisan Ads - Ad Display Code -->
-    <div id="adm-container-41"></div>
-    <script data-cfasync="false" async type="text/javascript" src="//daisanads.com/display/items.php?41&2&300&600&4&0&0"></script>
-    <!-- Daisan Ads - Ad Display Code -->
-</div>

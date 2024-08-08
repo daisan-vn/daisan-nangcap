@@ -10,12 +10,10 @@ class Theme extends Admin {
 	
 	function __construct() {
 		parent::__construct();
-
 	}
 
-
 	function index() {
-		global $login, $lang;
+		global $login;
 		$out = [];
 		$status= isset($_GET['status']) ? $_GET['status'] : "";
 		$out['filter_status']= $this->help->get_select_from_array($this->help->a_status, $status);
@@ -44,7 +42,7 @@ class Theme extends Admin {
 
 
 	function create() {
-		global $login, $lang;
+		global $login;
 		$theme_id = isset($_GET['ThemeId']) ? intval($_GET['ThemeId']) : 0;
 		$theme = $this->pdo->fetch_one("SELECT * FROM themes WHERE id=$theme_id");
 		$theme['avatar'] = $this->img->get_image($this->folder, $theme['avatar']);
@@ -88,7 +86,7 @@ class Theme extends Admin {
 
 
 	function detail(){
-		global $login, $lang;
+		global $login;
 		$PostId = isset($_GET['Id']) ? intval($_GET['Id']) : 0;
 		$post = $this->pdo->fetch_one("SELECT a.*,
 				(SELECT name FROM vsc_users WHERE a.user_id=user_id) AS username,

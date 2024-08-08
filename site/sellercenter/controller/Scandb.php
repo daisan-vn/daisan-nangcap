@@ -24,7 +24,7 @@ class Scandb extends Pageadmin {
             $out['key'] = $key;
         }
         $sql .= " ORDER BY a.id DESC LIMIT 10";
-        //var_dump($sql); exit();
+
         $stmt = $this->pdo->getPDO()->prepare($sql);
         $stmt->execute();
         $result = [];
@@ -224,16 +224,6 @@ class Scandb extends Pageadmin {
             echo $this->page->get_new_id_for_autorun($id, $limit);
             exit();
         }
-        
-//         $url = 'https://meta.vn/may-khoan-dong-luc-bosch-gsb-550-re-06011a15k7-bo-set-100-mon-p34606';
-//         $data = $this->_parsehtml(['url'=>$url]);
-//         $data['src'] = $url;
-//         $data['page_id'] = 1;
-//         $data['user_id'] = @$this->login;
-        
-//         $save = $this->product->save_product($data, 1);
-//         lib_dump($save);
-//         exit();
         
         $id = isset($_GET['id']) ? intval($_GET['id']) : 1;
         $a_method = [0=>'Quét các link mới',1=>'Quét lại toàn bộ link'];

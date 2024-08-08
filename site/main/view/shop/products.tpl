@@ -48,23 +48,9 @@
 
                     </div>
 
-                    <div class="ads-google mt-3 d-none d-sm-block">
-                        <!-- Daisan Ads - Ad Display Code -->
-                        <div id="adm-container-25"></div>
-                        <script data-cfasync="false" async type="text/javascript" src="//daisanads.com/display/items.php?25&2&300&600&4&0&0"></script>
-                        <!-- Daisan Ads - Ad Display Code -->
-                    </div>
-
                 </div>
 
                 <div class="col-xl-9">
-
-                    <div class="my-2 mb-3 d-none d-sm-block">
-                        <!-- Daisan Ads - Ad Display Code -->
-                        <div id="adm-container-8"></div>
-                        <script data-cfasync="false" async type="text/javascript" src="//daisanads.com/display/items.php?8&2&728&90&4&0&0"></script>
-                        <!-- Daisan Ads - Ad Display Code -->
-                    </div>
 
                     <div class="shop_category-content">
 

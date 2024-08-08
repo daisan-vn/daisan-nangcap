@@ -193,7 +193,7 @@ class Pages extends Admin {
             $item['status'] = $this->help_get_status($item['status'], 'pages', $item['id']);
             $item['featured']=$this->help_get_featured($item['featured'], 'pages', $item['id']);
             $item['number_admin'] = intval($item['number_admin']);
-            $item['package_end'] = ($item['package_end']=='0000-00-00' || $item['package_end']=='1970-00-00')?null:$item['package_end'];
+            $item['package_end'] = $item['package_end'];
             $item['all_users'] = $this->getall_users_page($item['id']);
             $result [] = $item;
         }
@@ -221,7 +221,7 @@ class Pages extends Admin {
     }
     
     function payment() {
-        global $login, $lang, $location;
+        global $login;
         $out = [];
         $status = isset($_GET['status']) ? intval($_GET['status']) : -1;
         $package_id = isset($_GET['package']) ? intval($_GET['package']) : 0;
@@ -237,10 +237,10 @@ class Pages extends Admin {
         $out['filter_keyword'] = isset($_GET['key']) ? $_GET['key'] : "";
         $out['filter_package'] = $this->help->get_select_from_array($a_package, $package_id, 'Gói dịch vụ');
         
-        $where = "p.price>0";
+        if($package_id) $where = "a.package_id=$package_id";
+        else $where = 'p.price>0';
         if($status===0) $where.=" AND a.package_end<'".date('Y-m-d')."'";
         elseif($status===1) $where.=" AND a.package_end>='".date('Y-m-d')."'";
-        if($package_id!==0) $where.=" AND a.package_id=$package_id";
         
         if(isset($_GET['key']) && $_GET['key'] != "") $where .= " AND (a.name LIKE '%".$_GET['key']."%' OR a.id LIKE '%".$_GET['key']."%')";
         $sql = "SELECT a.id,a.name,a.logo,a.page_name,a.created,a.status,a.package_end,ad.name AS admin,
@@ -254,14 +254,15 @@ class Pages extends Admin {
         $stmt->execute();
         $result = [];
         while ($item = $stmt->fetch()) {
-            $token = md5(time());
             $item['logo'] = $this->img->get_image($this->page->get_folder_img($item['id']), $item['logo']);
             $item['url'] = $this->page->get_pageurl($item['id'], $item['page_name']);
-            $item['package_end'] = ($item['package_end']=='0000-00-00' || $item['package_end']=='1970-00-00')?null:$item['package_end'];
-            $item['url_seller'] = URL_PAGEADMIN . "?mod=home&site=connect&adminId=$login&pageId=" . $item['id'] . "&token=$token";
-            $result [] = $item;
+            $item['package_end'] = $item['package_end'];
+            $item['url_seller'] = URL_PAGEADMIN . "?mod=home&site=connect&adminId=".$login."&pageId=".$item['id'];
+            $result[] = $item;
         }
+
         $this->smarty->assign("result", $result);
+        $this->smarty->assign('is_pay', $result && $result[0]['package_price'] > 0? true: false);
         
         $this->smarty->assign('out', $out);
         $this->smarty->display(LAYOUT_DEFAULT);
@@ -303,7 +304,7 @@ class Pages extends Admin {
     }
     
     function form(){
-        global $login, $lang;
+        global $login;
         $id = isset($_GET['id'])?intval($_GET['id']):0;
         
         if(isset($_POST['submit'])){
@@ -504,7 +505,7 @@ class Pages extends Admin {
     }
     
     function package(){
-        global $login, $lang;
+        global $login;
         
         if(isset($_POST['ajax_action']) && $_POST['ajax_action']=='load_package'){
             $id = intval(@$_POST['id']);
@@ -541,7 +542,7 @@ class Pages extends Admin {
     }
     
     function nation() {
-        global $login, $lang;
+        global $login;
         if(isset($_POST['ajax_action']) && $_POST['ajax_action']=='load_nation'){
             $id = intval(@$_POST['id']);
             $result = $this->pdo->fetch_one("SELECT * FROM nations WHERE Id=$id");
@@ -579,7 +580,7 @@ class Pages extends Admin {
     }
     
     function contact(){
-        global $login, $lang;
+        global $login;
         
         if(isset($_POST['ajax_action']) && $_POST['ajax_action']=='send_msg'){
             $data['page_id'] = $this->page_id;
@@ -735,26 +736,30 @@ class Pages extends Admin {
     
     
     function ajax_add_admin(){
-        $page_id = intval($_POST['page_id']);
-        $user_id = intval($_POST['user_id']);
+        $page_id = intval($_POST['page_id'] ?? 0);
+        $user_id = intval($_POST['user_id'] ?? 0);
         
         $rt = [];
         $rt['code'] = 0;
-        if(!$this->pdo->check_exist("SELECT 1 FROM users WHERE id=$user_id")) $rt['msg'] = "Tài khoản không tồn tại";
-        else if($this->pdo->check_exist("SELECT 1 FROM pageusers WHERE page_id=$page_id AND user_id=$user_id"))
+        if(!$this->pdo->check_exist("SELECT 1 FROM users WHERE id=$user_id")) {
+            $rt['msg'] = "Tài khoản không tồn tại";
+        }
+        else if($this->pdo->check_exist("SELECT 1 FROM pageusers WHERE page_id=$page_id AND user_id=$user_id")) {
             $rt['msg'] = "Tài khoản đã được set quản trị cho gian hàng này.";
-            else{
-                $data = [];
-                $data['user_id'] = $user_id;
-                $data['page_id'] = intval($_POST['page_id']);
-                $data['created'] = time();
-                $data['status'] = 1;
-                $this->pdo->insert('pageusers', $data);
-                $rt['code'] = 1;
-                $rt['msg'] = "Tạo quản trị cho gian hàng thành công";
-            }
-            
-            echo json_encode($rt); exit();
+        }
+        else {
+            $data = [];
+            $data['user_id'] = $user_id;
+            $data['page_id'] = $page_id;
+            $data['created'] = time();
+            $data['status'] = 1;
+            $this->pdo->insert('pageusers', $data);
+            $rt['code'] = 1;
+            $rt['msg'] = "Tạo quản trị cho gian hàng thành công";
+        }
+        
+        echo json_encode($rt);
+        exit();
     }
     
     function ajax_update_score_monthly() {

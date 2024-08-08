@@ -146,8 +146,8 @@ class Page extends Main {
     }
 	function category()
     {
-        // $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
-        $id = isset($this->_get['id']) ? $this->_get['id'] : (isset($_GET['id']) ? intval($_GET['id']) : 0);
+		$id = intval(\App::getParam('id', 0));
+
         $taxonomy = $this->pdo->fetch_one("SELECT * FROM taxonomy WHERE type='product' AND alias='$id' OR id='$id'");
         $id = @$taxonomy['id'];
         $category = $this->tax->get_value($id);

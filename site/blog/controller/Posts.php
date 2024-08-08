@@ -12,9 +12,9 @@ class Posts extends Blog {
 		);
 	}
 	
-	
 	function index() {
-		$cid = isset($this->_get['id']) ? $this->_get['id'] : 0;
+		$cid = intval(\App::getParam('id', 0));
+		
 		$taxonomy = $this->pdo->fetch_one("SELECT id,name,parent,keyword,description FROM taxonomy WHERE type='category' AND (id='$cid' OR alias='$cid')");
 		$cid = @$taxonomy['id'];
 		$where = "a.status=1 AND a.type='post'";
@@ -111,8 +111,8 @@ class Posts extends Blog {
     	$this->smarty->display(LAYOUT_HOME);
 	}
 	function post_detail(){
+		$id = intval(\App::getParam('id', 0));
 	    
-		$id = isset($this->_get['id']) ? $this->_get['id'] : "";
 		$where = "1=1";
 		if(is_numeric($id)) $where .= " AND id='$id'";
         else $where .= " AND alias='$id'";

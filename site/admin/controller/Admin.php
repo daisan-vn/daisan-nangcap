@@ -280,7 +280,7 @@ class Admin {
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_POST, 1);
         if(is_array($input)) curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($input));
-        curl_setopt($curl, CURLOPT_URL, simple_html_s('parseurl#_db'));
+        curl_setopt($curl, CURLOPT_URL, scrape_product_endpoint('parseurl#_db'));
         curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);

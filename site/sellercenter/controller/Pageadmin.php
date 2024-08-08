@@ -5,11 +5,11 @@ class Pageadmin {
     public $pdo, $str;
     public $help, $page, $img, $user;
     public $taxonomy, $product, $media;
-    public $smarty, $_get, $arg, $page_id, $profile;
-    public $lang, $translate, $login;
+    public $smarty, $arg, $page_id, $profile;
+    public $lang, $login;
 
     function __construct() {
-        global $tpl, $mod, $site, $smarty, $login, $reg, $lang, $_get, $location, $url_location;
+        global $tpl, $mod, $site, $smarty, $login, $reg, $lang, $location;
 
         $this->smarty = $smarty;
         $this->pdo = \Lib\DB::instance();
@@ -21,41 +21,39 @@ class Pageadmin {
         $this->taxonomy = \Lib\Dbo\Taxonomy::instance();
         $this->product = \Lib\Dbo\Product::instance();
         $this->media = \Lib\Dbo\Media::instance();
-        $this->_get = $_get;
         $this->login = $login;
+
+        if ($site == 'connect') {
+            return;
+        }
         
-        $this->page_id = isset($_SESSION[SESSION_PAGEID_MANAGER])? $_SESSION[SESSION_PAGEID_MANAGER] : 0;
-        if ($this->page_id == 0) {
+        $manager = \Auth::getPageManager();
+        if ($manager) {
+            $this->page_id = $manager['page_id'];
+        }
+        else {
             lib_redirect(DOMAIN);
         }
 
         $this->profile = $this->page->get_profile($this->page_id);
 
-        $pageuser = [];
-
-        // check là admin đăng nhập
-
-        // chỗ này có vấn đề khi kết nối đăng nhập bằng người dùng bình thường, kiểm tra lại xem
-        // mai test đăng nhập bằng người dùng bình thường
-
-        // chuẩn hóa các biến SESSION vào class Auth
-
-        if ($_SESSION[SESSION_IS_ADMIN] != 1) {
-            $pageuser = $this->pdo->fetch_one("SELECT u.id,u.name,u.avatar,a.position 
+        if ($manager['type'] == 'user') {
+            $pageuser = $this->pdo->fetch_one("SELECT u.id,u.name,u.avatar
                     FROM pageusers a LEFT JOIN users u ON u.id=a.user_id
-                    WHERE a.user_id=$login AND a.page_id=".$this->page_id);
-            if(!$pageuser && $site!='connect') lib_redirect(DOMAIN);
+                    WHERE a.user_id=".$login." AND a.page_id=".$this->page_id. " LIMIT 1");
 
             if ($this->profile['status'] != 1) {
                 echo 'Gian hàng bạn truy cập đã bị khóa hoặc không tồn tại.';
                 exit();
             }
-        }
 
-        if ($pageuser) {
+            $pageuser['panel_url'] = '?mod=account&site=index';
             $pageuser['avatar'] = $this->img->get_image($this->user->get_folder_img($pageuser['id']), $pageuser['avatar']);
         }
         else {
+            $pageuser = [];
+            $pageuser['panel_url'] = '/ds_admin/';
+            $pageuser['name'] = 'Admin';
             $pageuser['avatar'] = URL_UPLOAD . 'logo/super_admin_avatar.png';
         }
 
@@ -66,7 +64,6 @@ class Pageadmin {
             'stylesheet' => DOMAIN . "site/sellercenter/webroot/",
             'timenow' => time(),
             'domain' => DOMAIN,
-            'url_location'=> $location !=0 ? $url_location : DOMAIN,
             'url_pageadmin' => URL_PAGEADMIN,
             'url_upload' => URL_UPLOAD,
             'thislink' => THIS_LINK,
@@ -245,7 +242,7 @@ class Pageadmin {
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_POST, 1);
         if(is_array($input)) curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($input));
-        curl_setopt($curl, CURLOPT_URL, simple_html_s('parseurl#_db'));
+        curl_setopt($curl, CURLOPT_URL, scrape_product_endpoint('parseurl#_db'));
         curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);

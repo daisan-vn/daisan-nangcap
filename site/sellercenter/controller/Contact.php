@@ -27,7 +27,7 @@ class Contact extends Pageadmin{
 	
 	
 	function index(){
-		global $login, $lang;
+		global $login;
 		
 		if(isset($_POST['ajax_action']) && $_POST['ajax_action']=='send_msg'){
 			$data['page_id'] = $this->page_id;

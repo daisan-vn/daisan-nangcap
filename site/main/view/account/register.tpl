@@ -25,7 +25,7 @@
                                     <input type="password" class="form-control" id="RePass" name="RePass" aria-describedby="">
                                 </div>
                                 <button type="button" class="btn btn-primary btn-block btn-login text-dark" onclick="HodineRegister();">
-                                   Đăng ký tài khoản trên Daisan.vn
+                                   Đăng ký tài khoản
                                 </button>
                                 <p class="pt-3">Bằng cách tạo tài khoản, bạn đồng ý với <a target="_blank" href="/helpcenter/display.html?pId=11">Điều kiện sử dụng</a>
                                     và <a target="_blank" href="/helpcenter/display.html?pId=12">Thông báo về quyền riêng tư </a> của Daisan.vn</p>
@@ -36,8 +36,6 @@
                             <p>Bạn đã có một tài khoản?&nbsp;<a href="?mod=account&site=login">Đăng nhập</a></p>
                         </div>
                     </div>
-
-
                 </div>
             </div>
         </div>
@@ -84,7 +82,9 @@ function HodineRegister() {
 			} else {
 				noticeMsg('Thông báo', rt.Msg, 'success');
 				endloading();
-				location.href ="?mod=account&site=verify_register"
+                setTimeout(function() {
+                    location.href ="?mod=account&site=verify_register"
+                }, 1000);
 			}
 		});
 	}

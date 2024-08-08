@@ -99,7 +99,6 @@ class Home extends Main
 
     function nation()
     {
-//         global $login, $lang;
         $result = $this->pdo->fetch_all("SELECT * FROM nations");
         foreach ($result as $k => $item) {
             $result[$k]['logo'] = $this->img->get_image($this->folder, @$item['Image']);
