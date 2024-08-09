@@ -4,7 +4,7 @@
 <div class="card-body">
 	<div class="form-inline mb-3">
 		<div class="form-group mr-2">
-			<input type="text" id="filter_key" class="form-control" placeholder="Search" value="{$out.key}">
+			<input type="text" id="filter_key" class="form-control" placeholder="Search" value="{$out.key|default:''}">
 		</div>
 		<button type="button" class="btn btn-primary mr-2" onclick="filter();"><i class="fa fa-fw fa-search"></i>
 			Search</button>

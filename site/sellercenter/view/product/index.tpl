@@ -68,14 +68,13 @@
 			<td>Giá từ: <b>{$data.price|number_format}đ</b></td>
 			<td>{$data.status}</td>
 			<td class="text-right">
-				{if $product_id_arr[$data.id] eq 0}
+				{if empty($product_id_arr[$data.id])}
 				<button type="button" data-toggle="tooltip" data-placement="top" data-page-id=""
 					data-product-id="{$data.id}" title="Sản phẩm đẩy top" class="btn btn-light btn-sm"
 					onclick="PushTopProduct({$data.id});">
 					<i class="fa fa-level-up fa-fw"></i>
 				</button>
-				{/if}
-				{if $product_id_arr[$data.id] eq 1}
+				{else}
 				<button type="button" data-toggle="tooltip" data-placement="top" data-page-id=""
 					data-product-id="{$data.id}" title="Sản phẩm đẩy top" class="btn btn-light btn-sm"
 					onclick="PushTopProduct({$data.id});">
@@ -131,7 +130,7 @@
 				</div>
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
 				<button type="button" class="btn btn-primary" onclick="Copy();">Lưu thông tin</button>
 			</div>
 		</div>

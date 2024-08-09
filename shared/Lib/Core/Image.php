@@ -295,20 +295,21 @@ class Image extends \Lib\Core\Zebra {
     }
     function upload_image_base64($folder, $img, $imgname=null, $max_width=null, $resize=1){
     	if(!is_dir($folder)) $folder = DIR_UPLOAD.$folder;
-        // echo "<pre>";
-        // print_r('$imgname -----'.$imgname);
-        // echo "</pre>";
+
     	list($type, $img) = explode(';', $img);
     	list(, $img)      = explode(',', $img);
     	list(, $type)	= explode("/", $type);
-    	$imgname = ($imgname==null||$imgname=='') ? 'hodine_img' : $imgname;
-    	$imgname = time()."_".md5($imgname).".".$type;
+
+        if (!$imgname) {
+            $imgname = mt_rand(10000, 99999);
+        }
+    	$imgname = time()."_".$imgname.".".$type;
 
     	if(!is_dir($folder)){
             if (!mkdir($folder, 0777, true) && !is_dir($folder)) {
                 throw new \RuntimeException(sprintf('Directory "%s" was not created', $folder));
             }
-//    		mkdir($folder, 0777);
+//    		mkdir($folder, 0777, true);
 //    		chmod($folder, 0777);
     	}
     	$rt = false;

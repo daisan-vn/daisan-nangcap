@@ -125,6 +125,7 @@ class Profile extends Pageadmin{
 			}else{
 				$this->pdo->update('pageprofiles', $data, "page_id=".$this->page_id);
 			}
+			$this->page->update_page_score($this->page_id);
 			lib_redirect();
 		}
 
@@ -166,6 +167,7 @@ class Profile extends Pageadmin{
 			    if($img) @unlink($this->page->get_folder_img_upload($this->page_id).$img['image']);
 			    $this->pdo->update('pageaddress', $data, "id=$inId");
 			}
+			$this->page->update_page_score($this->page_id);
 			lib_redirect();
 		}
 		
@@ -219,6 +221,7 @@ class Profile extends Pageadmin{
 				if($img) @unlink($this->page->get_folder_img_upload($this->page_id).$img['avatar']);
 				$this->pdo->update('pagesupporters', $data, "Id=$inId");
 			}
+			$this->page->update_page_score($this->page_id);
 			lib_redirect();
 		}
 
@@ -252,6 +255,7 @@ class Profile extends Pageadmin{
 			$data['created'] = time();
 			$data['status'] = 1;
 			$this->pdo->insert('pagepartners', $data);
+			$this->page->update_page_score($this->page_id);
 			lib_redirect();
 		}
 

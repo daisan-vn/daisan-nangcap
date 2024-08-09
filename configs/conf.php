@@ -8,7 +8,6 @@ define("THIS_LINK", get_this_link());
 
 define('URL_UPLOAD', DOMAIN. 'site/upload/');
 define('DIR_UPLOAD', __ROOT. 'site/upload/');
-define('DIR_UPLOAD_S3', 'upload/');
 
 define("SESSION_LOGIN_ADMIN", lib_build_session_name("session_login_admin"));
 define("SESSION_LOGIN_DEFAULT", lib_build_session_name("session_login_member"));

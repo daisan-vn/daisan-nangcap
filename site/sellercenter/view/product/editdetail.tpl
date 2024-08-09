@@ -23,8 +23,7 @@
 			<div class="card-header">Thông tin sản phẩm</div>
 			<div class="card-body">
 				<input type="hidden" name="id" value="{$product.id|default:0}">
-				<input type="hidden" name="folder"
-					value="{$product.folder|default:''}">
+				<input type="hidden" name="folder" value="{$product.folder|default:''}">
 				<div class="form-group row">
 					<label class="col-sm-2 col-form-label">Tên sản phẩm</label>
 					<div class="col-sm-7">
@@ -99,10 +98,9 @@
 					</div>
 				</div>
 			</div>
-			<div class="card mb-3">
+			<div class="mb-3">
 				<div class="card-header bg-primary text-white">Thuộc tính</div>
-				<div class="card-body">
-
+				<div class="card-body pb-0">
 					<div class="form-group row">
 						<label class="col-sm-2 col-form-label">Loại thuộc tính</label>
 						<div class="col-sm-7">
@@ -116,16 +114,14 @@
 								{/foreach}
 							</select>
 						</div>
-
 					</div>
-					<hr>
+
 					<!-- dataAttribute -->
 					<div class="class" id="detailAttribute">
-						{if count($dataAttribute)>0} {foreach from=$dataAttribute key=k
-						item=v}
+						{if count($dataAttribute)>0}
+						{foreach from=$dataAttribute key=k item=v}
 						<div class="form-group row">
 							<label class="col-sm-2 col-form-label">{$v.name}</label>
-
 							<div class="col-sm-8">
 								<input type="hidden" name="detail_attribute_name_{$k+1}"
 									value="{$v.name}"> <select
@@ -145,16 +141,7 @@
 								</select>
 							</div>
 						</div>
-						{/foreach} {else}
-						<div class="form-group row">
-							<label class="col-sm-2 col-form-label">{$v.name}</label>
-							<div class="col-sm-8">
-								<input type="hidden" name="detail_attribute_name_{$k+1}"
-									value="{$v.key}"> <input type="text"
-									class="form-control" name="detail_attribute_content_{$k+1}"
-									value="{$v.content|default:''}">
-							</div>
-						</div>
+						{/foreach}
 						{/if}
 					</div>
 					<input type="hidden" name="lenght_attribute" id="lenght_attribute"
@@ -262,7 +249,10 @@
 	</form>
 </div>
 {include '../media/media_modal.tpl'}
-<input type="hidden" name="json_keywords" value='{$json_keywords}'>
+
+
+<input type="hidden" name="attr_folder" value='{$folder}'>
+<input type="hidden" name="json_keywords" value='{$json_keywords|default:'{}'}'>
 
 <link href="{$arg.stylesheet}plugins/chosen/chosen.min.css" rel="stylesheet">
 <script src="{$arg.stylesheet}plugins/chosen/chosen.jquery.min.js"></script>
@@ -276,6 +266,8 @@
 var ArrImg = [];
 var Images = $("input[name=images]").val();
 var Folder = $("input[name=folder]").val();
+var AttrFolder = $("input[name=attr_folder]").val();
+
 if(Images!='') ArrImg = Images.split(';');
 var id = $("input[name=id]").val();
 //var json_keywords = JSON.parse($("input[name=json_keywords]").val());
@@ -391,39 +383,39 @@ function changeAttribute($value, $curAttr, $curProduct) {
 
 	loading();
 	$.post('?mod=product&site=ajax_handle', Data).done(function (e) {
-		console.log(e);
 		if (e.length > 0) {
 			var $data = JSON.parse(e);
 			var data = JSON.parse($data);
 			
-			var xhtml = "";
+			var xhtml = "<hr/>";
 
 			data.forEach((element, index) => {
 				var i = index + 1;
 				var data_contents = element.contents;
-				if (data_contents.length > 0) {
-					var yhtml = `<select class="form-control selectpicker" 
-								name="detail_attribute_content_` + i + `[]" 
+				var yhtml = '', zhtml = '';
+
+				yhtml = `<select class="form-control selectpicker" name="detail_attribute_content_` + i + `[]" 
 								data-live-search="true"
 								data-none-selected-text="Chọn"
 								data-select-all-text="Chọn tất cả"
 								data-deselect-all-text="Bỏ tất cả"
 								data-actions-box="true"
 								multiple>`;
-					var zhtml = "";
+
+				if (data_contents.length > 0) {
 					data_contents.forEach((v, k) => {
 						var ahtml = "";
 						if (v.img_name != '' && v.img_name != null) {
-							ahtml = `<img src='` + FolderImg + v.img_name + `' width='30px' style='margin-right: 5px;'>`;
+							ahtml = `<img src='` + AttrFolder + v.img_name + `' width='30px' style='margin-right: 5px;'>`;
 						}
 						zhtml += `<option value="` + v.name + `" data-content="<span class='badge badge-info'>` + ahtml + v.name + `</span>">` + v.name + `</option>`;
 					});
 
-					yhtml += zhtml + `</select>`;
-				} else {
-					var yhtml = `<input type="text" class="form-control" name="detail_attribute_content_` + i + `">`;
 				}
-
+				else {
+					// yhtml = `<input type="text" class="form-control" name="detail_attribute_content_` + i + `">`;
+				}
+				yhtml += zhtml + `</select>`;
 
 				xhtml += `<div class="form-group row">
 				<label class="col-sm-2 col-form-label">`+ element.name + `</label>
@@ -437,8 +429,6 @@ function changeAttribute($value, $curAttr, $curProduct) {
 
 			$("#detailAttribute").html(xhtml);
 			$("#lenght_attribute").val(data.length);
-			// console.log($data.length);
-			// lenght_attribute
 			endloading();
 			$('.selectpicker').selectpicker();
 		}

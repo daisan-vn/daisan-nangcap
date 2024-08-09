@@ -222,13 +222,16 @@ class Product extends Pageadmin
             } elseif ($this->pdo->update('products', $data, "id=$id AND page_id=" . $this->page_id)) {
                 // update db
                 $this->update_page_mainproducts();
+
                 $rt['code'] = 1;
                 $rt['msg'] = 'Đưa sản phẩm làm sản phẩm showcase thành công.';
+
                 // reindex api
-                $curl_get_product = $this->curl_search_get_product($id);
-                $curl_get_product['fields']['ismain'] = $data['ismain'];
-                $dataCURL_str = json_encode($curl_get_product['fields']);
-                $this->curl_search_update_index($id, $dataCURL_str);
+                // $curl_get_product = $this->curl_search_get_product($id);
+                // $curl_get_product['fields']['ismain'] = $data['ismain'];
+                // $dataCURL_str = json_encode($curl_get_product['fields']);
+                // $this->curl_search_update_index($id, $dataCURL_str);
+
             } else {
                 $rt['msg'] = 'Xảy ra lỗi hệ thống, vui lòng thực hiện lại.';
             }
@@ -422,6 +425,7 @@ class Product extends Pageadmin
                 $rt['msg'] = "Vui lòng chọn danh mục cấp nhỏ nhất.";
             } else {
                 $data['taxonomy_id'] = $taxonomy_id;
+                
                 // ADD
                 if ($id == 0) {
                     $data['user_id'] = $login;
@@ -432,44 +436,39 @@ class Product extends Pageadmin
                     $data['id'] = $rt['code'];
                     
                     // indexes api
-                    $e_id = $data['id'];
-                    $e_category = $this->pdo->fetch_one("SELECT name FROM taxonomy WHERE id=$taxonomy_id");
-                    $e_date = new DateTime();
-                    $e_date->setTimestamp($data['created']);
+                    // $e_id = $data['id'];
+                    // $e_category = $this->pdo->fetch_one("SELECT name FROM taxonomy WHERE id=$taxonomy_id");
+                    // $e_date = new DateTime();
+                    // $e_date->setTimestamp($data['created']);
                     
-                    $dataIndex = [
-                        "category" => $e_category['name'],
-                        "page_id" => $data['page_id'],
-                        "date_start" => $e_date->format('Y-m-d\TH:i:s\Z'),
-                        "taxonomy_id" => $data['taxonomy_id'],
-                    ];
+                    // $dataIndex = [
+                    //     "category" => $e_category['name'],
+                    //     "page_id" => $data['page_id'],
+                    //     "date_start" => $e_date->format('Y-m-d\TH:i:s\Z'),
+                    //     "taxonomy_id" => $data['taxonomy_id'],
+                    // ];
                     
-                    $dataCURL_str = json_encode($dataIndex);
-                    $this->curl_search_update_index($e_id, $dataCURL_str);
-                    // echo "<pre>";
-                    // print_r($dataCURL_str);
-                    // echo "</pre>";
-                    // die();
-                    // EDIT
+                    // $dataCURL_str = json_encode($dataIndex);
+                    // $this->curl_search_update_index($e_id, $dataCURL_str);
                 } else {
-                    
                     $data['created'] = time();
                     // insert db
                     $this->pdo->update('products', $data, 'id=' . $id);
                     $rt['code'] = $id;
+
                     // indexes api
-                    $e_id = $data['id'];
-                    $e_category = $this->pdo->fetch_one("SELECT name FROM taxonomy WHERE id=$taxonomy_id");
-                    $e_date = new DateTime();
-                    $e_date->setTimestamp($data['created']);
+                    // $e_id = $data['id'];
+                    // $e_category = $this->pdo->fetch_one("SELECT name FROM taxonomy WHERE id=$taxonomy_id");
+                    // $e_date = new DateTime();
+                    // $e_date->setTimestamp($data['created']);
                     
-                    $curl_get_product = $this->curl_search_get_product($id);
-                    $curl_get_product['fields']['category'] = $e_category['name'];
-                    $curl_get_product['fields']['date_start'] = $e_date->format('Y-m-d\TH:i:s\Z');
-                    $curl_get_product['fields']['taxonomy_id'] = $data['taxonomy_id'];
+                    // $curl_get_product = $this->curl_search_get_product($id);
+                    // $curl_get_product['fields']['category'] = $e_category['name'];
+                    // $curl_get_product['fields']['date_start'] = $e_date->format('Y-m-d\TH:i:s\Z');
+                    // $curl_get_product['fields']['taxonomy_id'] = $data['taxonomy_id'];
                     
-                    $dataCURL_str = json_encode($dataIndex);
-                    $this->curl_search_update_index($e_id, $dataCURL_str);
+                    // $dataCURL_str = json_encode($dataIndex);
+                    // $this->curl_search_update_index($e_id, $dataCURL_str);
                 }
             }
             echo json_encode($rt);
@@ -631,6 +630,7 @@ class Product extends Pageadmin
      $this->smarty->display(LAYOUT_DEFAULT);
      }
      */
+
     function editDetail()
     {
         global $login;
@@ -658,30 +658,29 @@ class Product extends Pageadmin
         if (isset($_POST['ajax_action']) && $_POST['ajax_action'] == 'upload_images') {
             $page_id = $this->product->get_folder_img($id);
             if (empty($_FILES['file'])) {
-                echo 'Duong dan anh khong ton tai!';
+                echo 'Đường dẫn ảnh không tồn tại!';
                 exit();
             }
 
-            //duong dan upload
+            // duong dan upload
             
-            $file_data = $_FILES['file']['tmp_name'];
+            // $file_data = $_FILES['file']['tmp_name'];
+            
             $type = $_FILES['file']['type'];
-            
             list(, $type) = explode("/", $type);
-            $imgname = null;
-            $imgname = ($imgname == null || $imgname == '') ? 'hodine_img' : $imgname;
-            $filename = time() . "_" . md5($imgname) . "." . $type;
+            $imgname = mt_rand(10000, 99999);
+            $filename = time() . "_" . $imgname . "." . $type;
             
-            $fields = [
-                'uploaded_file' => curl_file_create($file_data, $type, $filename),
-                'width' => 270,
-                'height' => 270,
-                'name_file_upload' => DIR_UPLOAD_S3 . $page_id,
-                'type_resize' => 'fit',
-                'id' => $id,
-            ];
+            // $fields = [
+            //     'uploaded_file' => curl_file_create($file_data, $type, $filename),
+            //     'width' => 270,
+            //     'height' => 270,
+            //     'name_file_upload' => DIR_UPLOAD_S3 . $page_id,
+            //     'type_resize' => 'fit',
+            //     'id' => $id,
+            // ];
             
-            $this->callApiUpload(DOMAIN_API . 'resize-image', $fields, 'POST');
+            // $this->callApiUpload(DOMAIN_API . 'resize-image', $fields, 'POST');
             
             $upload = $this->img->upload_image_base64_v1($this->product->get_folder_img($id), @$_POST['img'], $filename, 800, 1);
             
@@ -690,20 +689,23 @@ class Product extends Pageadmin
             $this->pdo->update('products', $data, "id=$id");
             
             // reindex api
-            $curl_get_product = $this->curl_search_get_product($id);
-            $curl_get_product['fields']['images'] = $data['images'];
-            $dataCURL_str = json_encode($curl_get_product['fields']);
-            $this->curl_search_update_index($id, $dataCURL_str);
+            // $curl_get_product = $this->curl_search_get_product($id);
+            // $curl_get_product['fields']['images'] = $data['images'];
+            // $dataCURL_str = json_encode($curl_get_product['fields']);
+            // $this->curl_search_update_index($id, $dataCURL_str);
+
             echo $upload;
             exit();
         } elseif (isset($_POST['ajax_action']) && $_POST['ajax_action'] == 'remove_images') {
             $data = [];
-            $data['path_image'] = [
-                $this->product->get_folder_img_upload_s3($id) . '270x270/' . @$_POST['imgname'],
-                $this->product->get_folder_img_upload_s3($id) . '800x800/' . @$_POST['imgname'],
-            ];
+
+            // $data['path_image'] = [
+            //     $this->product->get_folder_img_upload_s3($id) . '270x270/' . @$_POST['imgname'],
+            //     $this->product->get_folder_img_upload_s3($id) . '800x800/' . @$_POST['imgname'],
+            // ];
             
-            $this->callAPI(DOMAIN_API . 'delete-image', json_encode($data), 'POST');
+            // $this->callAPI(DOMAIN_API . 'delete-image', json_encode($data), 'POST');
+
             @unlink($this->product->get_folder_img_upload($id) . @$_POST['imgname']);
             foreach ($a_image as $k => $item) {
                 if (!is_file($this->product->get_folder_img_upload($id) . $item)) unset($a_image[$k]);
@@ -712,10 +714,11 @@ class Product extends Pageadmin
             $this->pdo->update('products', $data, "id=$id");
             
             // reindex api
-            $curl_get_product = $this->curl_search_get_product($id);
-            $curl_get_product['fields']['images'] = $data['images'];
-            $dataCURL_str = json_encode($curl_get_product['fields']);
-            $this->curl_search_update_index($id, $dataCURL_str);
+            // $curl_get_product = $this->curl_search_get_product($id);
+            // $curl_get_product['fields']['images'] = $data['images'];
+            // $dataCURL_str = json_encode($curl_get_product['fields']);
+            // $this->curl_search_update_index($id, $dataCURL_str);
+
             exit();
         } elseif (isset($_POST['submit'])) {
             // attribute_contents - start
@@ -726,13 +729,15 @@ class Product extends Pageadmin
             $attribute_get_db = json_decode(empty($attribute_db['contents'])? "[]": $attribute_db['contents'], true);
             
             for ($i = 1; $i <= $lenght_attribute; $i++) {
-                $key = $_POST["detail_attribute_name_$i"];
-                $value = $_POST["detail_attribute_content_$i"];
-                $attribute_detail_push = [
-                    "name" => $key,
-                    "contents" => $value
-                ];
-                array_push($attribute_detail, $attribute_detail_push);
+                $key = $_POST["detail_attribute_name_$i"] ?? '';
+                $value = $_POST["detail_attribute_content_$i"]?? '';
+                if ($key && $value) {
+                    $attribute_detail_push = [
+                        "name" => $key,
+                        "contents" => $value
+                    ];
+                    array_push($attribute_detail, $attribute_detail_push);
+                }
             }
             
             $attribute_user_custom = $attribute_detail;
@@ -814,10 +819,10 @@ class Product extends Pageadmin
             $this->pdo->update('products', $data, "id=" . $product['id']);
             
             // UPDATE INDEX - START
-            if ($id != 0) {
-                $e_unit_name = trim(@$_POST['unit_name']);
-                $e_date = new DateTime();
-                $e_date->setTimestamp($data['created']);
+            // if ($id != 0) {
+            //     $e_unit_name = trim(@$_POST['unit_name']);
+            //     $e_date = new DateTime();
+            //     $e_date->setTimestamp($data['created']);
                 
                 // {
                 //     *"attribute_contents": "",
@@ -862,21 +867,21 @@ class Product extends Pageadmin
                 //     [created] => 1592195858
                 // )
                 
-                $curl_get_product = $this->curl_search_get_product($id);
-                $fields = $curl_get_product['fields'];
+                // $curl_get_product = $this->curl_search_get_product($id);
+                // $fields = $curl_get_product['fields'];
                 
-                $fields['name'] = $data['name'];
-                $fields['keyword'] = $data['keyword'];
-                $fields['minorder'] = $data['minorder'];
-                $fields['ordertime'] = $data['ordertime'];
-                $fields['unit'] = $e_unit_name;
-                $fields['groupattributes_id'] = $data['groupattributes_id'];
-                $fields['attribute_contents'] = $data['attribute_contents'];
-                $fields['created'] = $e_date->format('Y-m-d\TH:i:s\Z');
+                // $fields['name'] = $data['name'];
+                // $fields['keyword'] = $data['keyword'];
+                // $fields['minorder'] = $data['minorder'];
+                // $fields['ordertime'] = $data['ordertime'];
+                // $fields['unit'] = $e_unit_name;
+                // $fields['groupattributes_id'] = $data['groupattributes_id'];
+                // $fields['attribute_contents'] = $data['attribute_contents'];
+                // $fields['created'] = $e_date->format('Y-m-d\TH:i:s\Z');
                 
-                $dataCURL_str = json_encode($fields);
-                $this->curl_search_update_index($id, $dataCURL_str);
-            }
+                // $dataCURL_str = json_encode($fields);
+                // $this->curl_search_update_index($id, $dataCURL_str);
+            // }
             // UPDATE INDEX - END
             
             unset($data);
@@ -894,6 +899,7 @@ class Product extends Pageadmin
             // $mail_content .= DOMAIN."?mod=product&site=detail&pid=$id";
             // send_mail($mail_to,"New Product" , $mail_title, $mail_content);
             // SEND EMAIL - END
+
             $service_detail = isset($_SESSION['service_add_detail']) ? $_SESSION['service_add_detail'] : [];
             $this->pdo->query("DELETE FROM productmetas WHERE product_id=$id");
             foreach ($service_detail as $item) {
@@ -920,7 +926,9 @@ class Product extends Pageadmin
             }
             unset($_SESSION['service_add_price']);
             
-            lib_redirect("?mod=product&site=index");
+            // lib_redirect("?mod=product&site=index");
+            lib_redirect_back(-2);
+            exit;
         }
         
         $productmetas = $this->pdo->fetch_all("SELECT meta_key,meta_value FROM productmetas WHERE product_id=$id ORDER BY id");
@@ -959,6 +967,7 @@ class Product extends Pageadmin
                 }
             }
         }
+        
         $folder = URL_UPLOAD . "attribute/";
         $json_keywords = @file_get_contents(FILE_KEYWORDS);
         
@@ -1120,6 +1129,7 @@ class Product extends Pageadmin
             //     echo $data_f1;
             
             // }
+
             if ($id != 0) {
                 $result = $this->pdo->fetch_one("SELECT contents FROM groupattributes WHERE id=$id");
                 echo json_encode($result['contents'], JSON_UNESCAPED_UNICODE);
@@ -1170,11 +1180,12 @@ class Product extends Pageadmin
                 // update db
                 $this->pdo->update('products', $data, "id=$id");
                 $this->update_page_mainproducts();
+
                 // reindex api
-                $curl_get_product = $this->curl_search_get_product($id);
-                $curl_get_product['fields']['ismain'] = $data['ismain'];
-                $dataCURL_str = json_encode($curl_get_product['fields']);
-                $this->curl_search_update_index($id, $dataCURL_str);
+                // $curl_get_product = $this->curl_search_get_product($id);
+                // $curl_get_product['fields']['ismain'] = $data['ismain'];
+                // $dataCURL_str = json_encode($curl_get_product['fields']);
+                // $this->curl_search_update_index($id, $dataCURL_str);
             }
             echo json_encode($rt);
             exit();

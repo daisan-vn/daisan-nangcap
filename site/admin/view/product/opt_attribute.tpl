@@ -63,7 +63,8 @@ lựa chọn 2 <enter>">{$v.show_content}</textarea>
 		</div>
 	</div>
 </form>
-<input type="hidden" name="json_keywords" value='{$json_keywords}'>
+
+<input type="hidden" name="json_keywords" value='{$json_keywords|default:'{}'}'>
 
 <link href="{$arg.stylesheet}chosen/chosen.min.css" rel="stylesheet">
 <script src="{$arg.stylesheet}chosen/chosen.jquery.min.js"></script>
@@ -75,13 +76,12 @@ lựa chọn 2 <enter>">{$v.show_content}</textarea>
 	var ArrImg = [];
 	var Images = $("input[name=images]").val();
 	var Folder = $("input[name=folder]").val();
-	if (Images != '') ArrImg = Images.split(';');
+	if (Images) ArrImg = Images.split(';');
 	var id = $("input[name=id]").val();
 	var json_keywords = JSON.parse($("input[name=json_keywords]").val());
+
 	// $("select#attribute_id").change(function () {
-	// 	console.log('change attribute');
 	// 	var selected = $(this).children("option:selected").val();
-	// 	console.log(selected);
 	// });
 
 	$(window).ready(function () {
@@ -134,7 +134,6 @@ lựa chọn 2 <enter>">{$v.show_content}</textarea>
 		// var Data = {};
 		// Data['id'] = $value;
 		// Data['ajax_action'] = "load_detail_attribute";
-		// console.log($value);
 		// loading();
 		// $.post('?mod=product&site=ajax_handle', Data).done(function (e) {
 		// 	var $data = JSON.parse(e);
@@ -152,7 +151,6 @@ lựa chọn 2 <enter>">{$v.show_content}</textarea>
 
 		// 	$("#detailAttribute").html(xhtml);
 		// 	$("#lenght_attribute").val($data.length);
-		// 	console.log($data.length);
 		// 	// lenght_attribute
 		// 	endloading();
 		// });

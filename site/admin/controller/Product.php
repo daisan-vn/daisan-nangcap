@@ -554,6 +554,7 @@ class Product extends Admin {
             lib_redirect("?mod=product&site=list_attribute");
         }
         
+        $this->smarty->assign('id', $id);
         $this->smarty->assign('result', $result);
         $this->smarty->assign('folder', $folder);
         $this->smarty->display(LAYOUT_DEFAULT);
@@ -693,24 +694,25 @@ class Product extends Admin {
             
             // UPDATE INDEX - START
             
-            if ($id != 0 ) {
-                $curl_get_product = $this->curl_search_get_product($id);
-                $e_category = $this->pdo->fetch_one("SELECT name FROM taxonomy WHERE id=$taxonomy_id");
+            // if ($id != 0 ) {
+            //     $curl_get_product = $this->curl_search_get_product($id);
+            //     $e_category = $this->pdo->fetch_one("SELECT name FROM taxonomy WHERE id=$taxonomy_id");
                 
-                $e_unit_name = trim(@$_POST['unit_name']);
-                $curl_get_product['fields']['taxonomy_id']          = $data['taxonomy_id'];
-                $curl_get_product['fields']['category']             = $e_category['name'];
-                $curl_get_product['fields']['minorder']             = $data['minorder'];
-                $curl_get_product['fields']['name']                 = $data['name'];
-                $curl_get_product['fields']['unit']                 = $e_unit_name;
-                $curl_get_product['fields']['groupattributes_id']   = $data['groupattributes_id'];
-                $curl_get_product['fields']['attribute_contents']   = $data['attribute_contents'];
+            //     $e_unit_name = trim(@$_POST['unit_name']);
+            //     $curl_get_product['fields']['taxonomy_id']          = $data['taxonomy_id'];
+            //     $curl_get_product['fields']['category']             = $e_category['name'];
+            //     $curl_get_product['fields']['minorder']             = $data['minorder'];
+            //     $curl_get_product['fields']['name']                 = $data['name'];
+            //     $curl_get_product['fields']['unit']                 = $e_unit_name;
+            //     $curl_get_product['fields']['groupattributes_id']   = $data['groupattributes_id'];
+            //     $curl_get_product['fields']['attribute_contents']   = $data['attribute_contents'];
                 
-                $dataCURL_str = json_encode($curl_get_product['fields']);
-                $this->curl_search_update_index($id, $dataCURL_str);
-            }
+            //     $dataCURL_str = json_encode($curl_get_product['fields']);
+            //     $this->curl_search_update_index($id, $dataCURL_str);
+            // }
             
             // UPDATE INDEX - END
+
             $service_detail = isset($_SESSION['service_add_detail'])?$_SESSION['service_add_detail']:[];
             $this->pdo->query("DELETE FROM productmetas WHERE product_id=$id");
             foreach ($service_detail AS $item){
@@ -745,8 +747,6 @@ class Product extends Admin {
             $this->pdo->update('products', $data, "id=".$id);
             lib_redirect("?mod=product&site=index");
         }
-        
-        //lib_dump($_SESSION['service_add_price']); exit();
         
         $product = $this->pdo->fetch_one("SELECT * FROM products WHERE id=$id");
         $product['folder'] = $this->product->get_url_img($product['page_id']);
@@ -956,22 +956,21 @@ class Product extends Admin {
             
             //duong dan upload
             
-            $file_data = $_FILES['file']['tmp_name'];
+            // $file_data = $_FILES['file']['tmp_name'];
+
             $type = $_FILES['file']['type'];
-            
             list(, $type)	= explode("/", $type);
-            $imgname = null;
-            $imgname = ($imgname==null||$imgname=='') ? 'hodine_img' : $imgname;
-            $filename = time()."_".md5($imgname).".".$type;
+            $imgname = mt_rand(10000, 99999);
+            $filename = time()."_".$imgname.".".$type;
             
-            $fields = [
-                'uploaded_file' => curl_file_create($file_data, $type, $filename),
-                'width' => 270,
-                'height' => 270,
-                'name_file_upload' => DIR_UPLOAD_S3 . $page_id,
-                'type_resize' => 'fit',
-                'id' => $id,
-            ];
+            // $fields = [
+            //     'uploaded_file' => curl_file_create($file_data, $type, $filename),
+            //     'width' => 270,
+            //     'height' => 270,
+            //     'name_file_upload' => DIR_UPLOAD_S3 . $page_id,
+            //     'type_resize' => 'fit',
+            //     'id' => $id,
+            // ];
             
             $product = $this->pdo->fetch_one("SELECT a.images FROM products a WHERE a.id=$id");
             
@@ -986,9 +985,10 @@ class Product extends Admin {
             }
             
             $upload = $this->img->upload_image_base64_v1($this->product->get_folder_img($id), @$_POST['img'], $filename, 800, 1);
-            if(in_array(DOMAIN, ['https://v2.daisan.vn/','https://daisan.vn/'])&&!is_localhost()){
-                $this->callApiUpload(DOMAIN_API.'resize-image',  $fields, 'POST');
-            }
+
+            // if(in_array(DOMAIN, ['https://v2.daisan.vn/','https://daisan.vn/'])&&!is_localhost()){
+            //     $this->callApiUpload(DOMAIN_API.'resize-image',  $fields, 'POST');
+            // }
             
             $a_image[] = $upload;
             $data = [];
@@ -1036,15 +1036,15 @@ class Product extends Admin {
                 }
             }
             
-            if(in_array(DOMAIN, ['https://v2.daisan.vn/','https://daisan.vn/'])&&!is_localhost()){
-                $data = [];
-                $data['path_image'] = [
-                    $this->product->get_folder_img_upload_s3($id).'270x270/'.@$_POST['imgname'],
-                    $this->product->get_folder_img_upload_s3($id).'800x800/'.@$_POST['imgname'],
-                ];
+            // if(in_array(DOMAIN, ['https://v2.daisan.vn/','https://daisan.vn/'])&&!is_localhost()){
+            //     $data = [];
+            //     $data['path_image'] = [
+            //         $this->product->get_folder_img_upload_s3($id).'270x270/'.@$_POST['imgname'],
+            //         $this->product->get_folder_img_upload_s3($id).'800x800/'.@$_POST['imgname'],
+            //     ];
                 
-                $this->callAPI(DOMAIN_API.'delete-image', json_encode($data), 'POST');
-            }
+            //     $this->callAPI(DOMAIN_API.'delete-image', json_encode($data), 'POST');
+            // }
             
             @unlink($this->product->get_folder_img_upload($id).@$_POST['imgname']);
             
@@ -1170,14 +1170,36 @@ class Product extends Admin {
 //             $folder     = $_POST['folder'];
             $imgName    = $_POST['imgName'];
             $imgID      = $_POST['imgID'];
+
             
             if($imgName != null || $imgName != ''){
                 if(is_file(DIR_UPLOAD ."attribute/". $imgName)){
                     @unlink(DIR_UPLOAD ."attribute/". $imgName);
                 }
             }
-            
+
             $this->pdo->query("DELETE FROM attributeimages WHERE id=$imgID");
+            
+            $groupID = intval($_POST['groupID'] ?? 0);
+            if ($groupID != 0) {
+                $group = $this->pdo->fetch_one("SELECT contents FROM groupattributes WHERE id=$groupID LIMIT 1");
+                $contents = json_decode($group['contents'], true);
+                $found = false;
+                foreach ($contents as &$attr) {
+                    foreach ($attr['contents'] as &$value) {
+                        if ($value['img_id'] == $imgID) {
+                            $value['img_name'] = '';
+                            $found = true;
+                            break 2;
+                        }
+                    }
+                }
+                if ($found) {
+                    $contents = json_encode($contents);
+                    $this->pdo->update('groupattributes', ['contents' => $contents], "id=$groupID");
+                }
+            }
+
             echo true;
             exit();
         }else if(isset($_POST['ajax_action']) && $_POST['ajax_action']=='add_fast_one'){
@@ -1223,13 +1245,13 @@ class Product extends Admin {
             $this->pdo->update('products', $new_update, "id=$id");
             
             // update index
-            $curl_get_product = $this->curl_search_get_product($id);
+            // $curl_get_product = $this->curl_search_get_product($id);
             
-            $curl_get_product['fields']['groupattributes_id'] = $new_update['groupattributes_id'];
-            $curl_get_product['fields']['attribute_contents'] = $new_update['attribute_contents'];
+            // $curl_get_product['fields']['groupattributes_id'] = $new_update['groupattributes_id'];
+            // $curl_get_product['fields']['attribute_contents'] = $new_update['attribute_contents'];
             
-            $dataCURL_str = json_encode($curl_get_product['fields']);
-            $this->curl_search_update_index($id, $dataCURL_str);
+            // $dataCURL_str = json_encode($curl_get_product['fields']);
+            // $this->curl_search_update_index($id, $dataCURL_str);
             
             exit();
         }else if(isset($_POST['ajax_action']) && $_POST['ajax_action']=='add_fast_select'){
@@ -1277,13 +1299,13 @@ class Product extends Admin {
                 $this->pdo->update('products', $new_update, "id=$v");
                 
                 // update indexes
-                $curl_get_product = $this->curl_search_get_product($v);
+                // $curl_get_product = $this->curl_search_get_product($v);
                 
-                $curl_get_product['fields']['groupattributes_id'] = $new_update['groupattributes_id'];
-                $curl_get_product['fields']['attribute_contents'] = $new_update['attribute_contents'];
+                // $curl_get_product['fields']['groupattributes_id'] = $new_update['groupattributes_id'];
+                // $curl_get_product['fields']['attribute_contents'] = $new_update['attribute_contents'];
                 
-                $dataCURL_str = json_encode($curl_get_product['fields']);
-                $this->curl_search_update_index($v, $dataCURL_str);
+                // $dataCURL_str = json_encode($curl_get_product['fields']);
+                // $this->curl_search_update_index($v, $dataCURL_str);
             }
             
             echo $_POST['url'];
@@ -1559,7 +1581,7 @@ class Product extends Admin {
             $rt['msg'] = "Xóa thông tin sản phẩm thành công.";
             
             //Remove index api
-            $this->curl_search_delete_product($id);
+            // $this->curl_search_delete_product($id);
         }
         echo json_encode($rt);
     }
@@ -1586,7 +1608,7 @@ class Product extends Admin {
                 $this->pdo->query("DELETE FROM products WHERE id=$id");
                 
                 //Remove index api
-                $this->curl_search_delete_product($id);
+                // $this->curl_search_delete_product($id);
                 
                 $content = array('id'=>$id, 'name'=>$product['name']);
                 $this->savetablechangelogs('deleted', 'products', $content);
@@ -1688,7 +1710,6 @@ class Product extends Admin {
             }
             
         }
-        lib_dump($result);
         
         $fp = fopen(FILE_INFO_METAS, 'w');
         fwrite($fp, json_encode($result));
@@ -1772,42 +1793,39 @@ class Product extends Admin {
                 $a_img = explode(";", $product['images']);
                 foreach ($a_img AS $imgname){
                     $folder = $this->page->get_folder_img_upload($page_id);
-//                    lib_dump($folder);
-//                    exit();
+
                     if(!is_dir($folder)) if (!mkdir($folder, 0775) && !is_dir($folder)) {
                         throw new \RuntimeException(sprintf('Directory "%s" was not created', $folder));
                     }
                     @chmod($folder, 0775);
 
-                    //upload amazon
-                    //$file_data = $_FILES['file']['tmp_name'];
-//                    $type = $_FILES['file']['type'];
+//                     //upload amazon
+//                     //$file_data = $_FILES['file']['tmp_name'];
+// //                    $type = $_FILES['file']['type'];
 
-//                    $file_data = strtolower(pathinfo($this->page->get_folder_img_upload($old_page_id).$imgname, PATHINFO_DIRNAME));
-                    strtolower(pathinfo($this->page->get_folder_img_upload($old_page_id).$imgname, PATHINFO_EXTENSION));
-                    strtolower(pathinfo($this->page->get_folder_img_upload($old_page_id).$imgname, PATHINFO_FILENAME));
+// //                    $file_data = strtolower(pathinfo($this->page->get_folder_img_upload($old_page_id).$imgname, PATHINFO_DIRNAME));
+//                     strtolower(pathinfo($this->page->get_folder_img_upload($old_page_id).$imgname, PATHINFO_EXTENSION));
+//                     strtolower(pathinfo($this->page->get_folder_img_upload($old_page_id).$imgname, PATHINFO_FILENAME));
 
-//                    $type = strtolower(pathinfo($this->page->get_folder_img_upload(23949).'1594887798_9afdb01339ef137ea2f3fb1aa64a9024.jpeg', PATHINFO_EXTENSION));
-//                    $filename = strtolower(pathinfo($this->page->get_folder_img_upload(23949).'1594887798_9afdb01339ef137ea2f3fb1aa64a9024.jpeg', PATHINFO_FILENAME));
-//                    $file_data = realpath($this->page->get_folder_img_upload(23949).'1594887798_9afdb01339ef137ea2f3fb1aa64a9024.jpeg');
-                    $file_data = realpath($this->page->get_folder_img_upload($old_page_id).$imgname);
-//                    echo "<pre>";
-//                    print_r($file_data);
-//                    echo "</pre>";die;
-//                    $curl_file_create = new CurlFile($file_data, $type, $filename);
-                    $curl_file_create = new CurlFile($file_data, mime_content_type($file_data), basename($file_data));
+// //                    $type = strtolower(pathinfo($this->page->get_folder_img_upload(23949).'1594887798_9afdb01339ef137ea2f3fb1aa64a9024.jpeg', PATHINFO_EXTENSION));
+// //                    $filename = strtolower(pathinfo($this->page->get_folder_img_upload(23949).'1594887798_9afdb01339ef137ea2f3fb1aa64a9024.jpeg', PATHINFO_FILENAME));
+// //                    $file_data = realpath($this->page->get_folder_img_upload(23949).'1594887798_9afdb01339ef137ea2f3fb1aa64a9024.jpeg');
+//                     $file_data = realpath($this->page->get_folder_img_upload($old_page_id).$imgname);
 
-                    $fields = [
-//                        'uploaded_file' => curl_file_create($file_data, $type, $filename),
-                        'uploaded_file' => $curl_file_create,
-                        'width' => 270,
-                        'height' => 270,
-                        'name_file_upload' => DIR_UPLOAD_S3 . 'pages/' . $page_id. '/',
-                        'type_resize' => 'fit',
-                        'id' => $id,
-                    ];
+// //                    $curl_file_create = new CurlFile($file_data, $type, $filename);
+//                     $curl_file_create = new CurlFile($file_data, mime_content_type($file_data), basename($file_data));
 
-                    $this->callAPIUpload(DOMAIN_API.'resize-image',  $fields, 'POST');
+//                     $fields = [
+// //                        'uploaded_file' => curl_file_create($file_data, $type, $filename),
+//                         'uploaded_file' => $curl_file_create,
+//                         'width' => 270,
+//                         'height' => 270,
+//                         'name_file_upload' => DIR_UPLOAD_S3 . 'pages/' . $page_id. '/',
+//                         'type_resize' => 'fit',
+//                         'id' => $id,
+//                     ];
+
+//                     $this->callAPIUpload(DOMAIN_API.'resize-image',  $fields, 'POST');
 
                     @copy($this->page->get_folder_img_upload($old_page_id).$imgname, $folder.$imgname);
 

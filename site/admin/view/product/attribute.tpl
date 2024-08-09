@@ -22,7 +22,7 @@
 			<div class="form-group row">
 				<label class="col-sm-2 col-form-label">Tên loại thuộc tính</label>
 				<div class="col-sm-7">
-					<input type="text" class="form-control" name="name" value="{$result.name}">
+					<input type="text" class="form-control" name="name" value="{$result.name|default:''}">
 				</div>
 				
 			</div>
@@ -30,7 +30,7 @@
 				<label class="col-sm-2 col-form-label">Các thuộc tính</label>
 				<div class="col-sm-7">
 					<textarea class="form-control" name="attribute" rows="8" placeholder="Thuộc tính 1 <enter>
-Thuộc tính 2">{$result.content}</textarea>
+Thuộc tính 2">{$result.content|default:''}</textarea>
 				</div>
 				
 			</div>
@@ -45,7 +45,7 @@ Thuộc tính 2">{$result.content}</textarea>
 	</div>
 </form>
 
-<input type="hidden" name="json_keywords" value='{$json_keywords}'>
+<input type="hidden" name="json_keywords" value='{$json_keywords|default:'{}'}'>
 
 <link href="{$arg.stylesheet}chosen/chosen.min.css" rel="stylesheet">
 <script src="{$arg.stylesheet}chosen/chosen.jquery.min.js"></script>
@@ -59,7 +59,5 @@ Thuộc tính 2">{$result.content}</textarea>
 			source: json_keywords
 		});
 	});
-	var result = confirm("Want to delete?");
-	// document.getElementById("formAttr").action = window.location.href;
 </script>
 {/literal}

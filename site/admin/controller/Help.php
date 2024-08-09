@@ -14,19 +14,16 @@ class Help extends Admin {
     }
 
     function ajax_sort() {
-        if (isset($_POST['id'])) {
-            $sql = "SHOW COLUMNS FROM ".$_POST['table'];
-            $stmt = $this->pdo->getPDO()->prepare($sql);
-            $stmt->execute();
-            $table_info = $stmt->fetch(PDO::FETCH_COLUMN);
-            // $table_prefix = substr($table_info, 0, strpos($table_info, '_'));
-            $data['sort'] = intval($_POST['sort']);
-            $this->pdo->update($_POST['table'], $data, "id=".$_POST['id']);
+        $id = isset($_POST['id']) ? intval($_POST['id']) : 0;
+        $sort = isset($_POST['sort']) ? intval($_POST['sort']) : 0;
+        $table = isset($_POST['table']) ? trim($_POST['table']) : '';
+        if ($id && $table) {
+            $data['sort'] = $sort;
+            $this->pdo->update($table, $data, "id=".$id);
             echo 1;
             exit();
         }
         echo 0;
-        exit();
     }
 
     function ajax_active_item() {
@@ -42,87 +39,94 @@ class Help extends Admin {
             if ($value) {
                 if ($value['status'] == 0 || $value['status'] == 2) {
                     $status = 1;
+
+                    if ($table == 'products') {
+                        // if product update product index
+                    }
+
+                    // tổng quát mô hình kiểu if (isset($hook[$table])) {} ....
                 }
                 elseif($value['status'] == 1) {
                     $status = 2;
+
+                    if ($table == 'products') {
+                        // if product delete product index
+                    }
                 }
-            }
-            else {
-                $status = 0;
-            }
 
-            $this->pdo->query("UPDATE ".$table." SET status=$status WHERE Id=".$id);
-            echo $this->help_get_status($status, $table, $id);
-            exit();
+                $this->pdo->query("UPDATE ".$table." SET status=$status WHERE id=".$id);
+                echo $this->help_get_status($status, $table, $id);
+                exit();
+            }
         }
         echo 0;
     }
 
-    function __ajax_active_item() {
-        $id = isset($_POST['id']) ? intval($_POST['id']) : 0;
-        $table = isset($_POST['table']) ? trim($_POST['table']) : '';
+//     function __ajax_active_item() {
+//         $id = isset($_POST['id']) ? intval($_POST['id']) : 0;
+//         $table = isset($_POST['table']) ? trim($_POST['table']) : '';
         
-        if ($id && $table) {
-            $value = $this->pdo->fetch_one("SELECT status FROM ".$table." WHERE Id=".$id.' LIMIT 1');
-            $curl_get_product = $this->curl_search_get_product($id);
-            if (@$value['status'] == 0 || @$value['status'] == 2) {
-                $status = 1;
-                // add index api
-                $curl_get_product = $this->curl_search_get_product($id);
-                $data = $this->pdo->fetch_one("SELECT * FROM ".$table." WHERE Id=".$id.' LIMIT 1');
+//         if ($id && $table) {
+//             $value = $this->pdo->fetch_one("SELECT status FROM ".$table." WHERE Id=".$id.' LIMIT 1');
 
-                $taxonomy_id = isset($data['taxonomy_id']) ? $data['taxonomy_id'] : 0;
-                $e_category = $this->pdo->fetch_one("SELECT name FROM taxonomy WHERE id=$taxonomy_id");
+//             if (@$value['status'] == 0 || @$value['status'] == 2) {
+//                 $status = 1;
+//                 // add index api
+//                 $curl_get_product = $this->curl_search_get_product($id);
+//                 $data = $this->pdo->fetch_one("SELECT * FROM ".$table." WHERE Id=".$id.' LIMIT 1');
 
-                $page_id = isset($data['page_id']) ? $data['page_id'] : 0;
-                $e_package = $this->pdo->fetch_one("SELECT package_id, endtime FROM pagepackage WHERE page_id=$page_id LIMIT 1");
-                $e_package['endtime'] = gmdate("Y-m-d", strtotime(@$e_package['endtime'])+7*3600);
+//                 $taxonomy_id = isset($data['taxonomy_id']) ? $data['taxonomy_id'] : 0;
+//                 $e_category = $this->pdo->fetch_one("SELECT name FROM taxonomy WHERE id=$taxonomy_id");
 
-                $e_date = new DateTime();
-                $e_date->setTimestamp($data['created']);
-                $fields = $curl_get_product['fields'];
-//
-//                $e_unit_name = trim(@$_POST['unit_name']);
-                $fields['attribute_contents']   = $data['attribute_contents'];
-                $fields['category']   = $e_category['name'];
-                $fields['date_start']   = $e_date->format('Y-m-d\TH:i:s\Z');
-                $fields['groupattributes_id']   = $data['groupattributes_id'];
-                $fields['images']               = $data['images'];
-                $fields['keyword']              = $data['keyword'];
-                $fields['location']             = '123';
-                $fields['max_price']            = '216000';
-                $fields['min_price']            = '216000';
-                $fields['minorder']             = !empty($data['minorder']) ? $data['minorder'] : '';
-                $fields['name']                 = !empty($data['name']) ? $data['name'] : '';
-                $fields['ordertime']            = !empty($data['ordertime']) ? $data['ordertime'] : '';
-                $fields['package_end']          = !empty($e_package['endtime']) ? $e_package['endtime'] : '';
-                $fields['package_id']           = !empty($e_package['package_id']) ? $e_package['package_id'] : 0;
-                $fields['page_id']              = !empty($data['page_id']) ? $data['page_id'] : 0;
-                $fields['page_name']            = '123';
-                $fields['pageaddress']          = 'Hà nội';
-                $fields['pagename']             = 'Công ty TNHH Vật liệu xây dựng Phật Sơn Ousheng';
-                $fields['phone']                = 'Foshan Ousheng Building Materi';
-                $fields['status']               = $status = 1;
-                $fields['taxonomy_id']          = $data['taxonomy_id'];
-                $fields['unit']                 = 'm2';
+//                 $page_id = isset($data['page_id']) ? $data['page_id'] : 0;
+//                 $e_package = $this->pdo->fetch_one("SELECT package_id, endtime FROM pagepackage WHERE page_id=$page_id LIMIT 1");
+//                 $e_package['endtime'] = gmdate("Y-m-d", strtotime(@$e_package['endtime'])+7*3600);
 
-                $dataCURL_str = json_encode($fields);
-                $this->curl_search_update_index($id, $dataCURL_str);
-            }
+//                 $e_date = new DateTime();
+//                 $e_date->setTimestamp($data['created']);
+//                 $fields = $curl_get_product['fields'];
+// //
+// //                $e_unit_name = trim(@$_POST['unit_name']);
+//                 $fields['attribute_contents']   = $data['attribute_contents'];
+//                 $fields['category']   = $e_category['name'];
+//                 $fields['date_start']   = $e_date->format('Y-m-d\TH:i:s\Z');
+//                 $fields['groupattributes_id']   = $data['groupattributes_id'];
+//                 $fields['images']               = $data['images'];
+//                 $fields['keyword']              = $data['keyword'];
+//                 $fields['location']             = '123';
+//                 $fields['max_price']            = '216000';
+//                 $fields['min_price']            = '216000';
+//                 $fields['minorder']             = !empty($data['minorder']) ? $data['minorder'] : '';
+//                 $fields['name']                 = !empty($data['name']) ? $data['name'] : '';
+//                 $fields['ordertime']            = !empty($data['ordertime']) ? $data['ordertime'] : '';
+//                 $fields['package_end']          = !empty($e_package['endtime']) ? $e_package['endtime'] : '';
+//                 $fields['package_id']           = !empty($e_package['package_id']) ? $e_package['package_id'] : 0;
+//                 $fields['page_id']              = !empty($data['page_id']) ? $data['page_id'] : 0;
+//                 $fields['page_name']            = '123';
+//                 $fields['pageaddress']          = 'Hà nội';
+//                 $fields['pagename']             = 'Công ty TNHH Vật liệu xây dựng Phật Sơn Ousheng';
+//                 $fields['phone']                = 'Foshan Ousheng Building Materi';
+//                 $fields['status']               = $status = 1;
+//                 $fields['taxonomy_id']          = $data['taxonomy_id'];
+//                 $fields['unit']                 = 'm2';
 
-            elseif(@$value['status'] == 1) {
-                $status = 2;
-                //remove index api
-                $this->curl_search_delete_product($id);
-            }
+//                 $dataCURL_str = json_encode($fields);
+//                 $this->curl_search_update_index($id, $dataCURL_str);
+//             }
 
-            $this->pdo->query("UPDATE ".$table." SET status=$status WHERE Id=".$id);
+//             elseif(@$value['status'] == 1) {
+//                 $status = 2;
+//                 //remove index api
+//                 $this->curl_search_delete_product($id);
+//             }
 
-            echo $this->help_get_status($status, $table, $id);
-            exit();
-        }
-        echo 0;
-    }
+//             $this->pdo->query("UPDATE ".$table." SET status=$status WHERE Id=".$id);
+
+//             echo $this->help_get_status($status, $table, $id);
+//             exit();
+//         }
+//         echo 0;
+//     }
 
     function ajax_active_multi() {
         $type = isset($_POST['type']) ? intval($_POST['type']) : 0;

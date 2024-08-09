@@ -517,9 +517,6 @@ class Product {
     function get_folder_img_upload($id){
         return DIR_UPLOAD.$this->get_folder_img($id);
     }
-    function get_folder_img_upload_s3($id){
-        return '/'.DIR_UPLOAD_S3.$this->get_folder_img($id);
-    }
     
     function set_score(){
         $a_score = array(

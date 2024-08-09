@@ -63,7 +63,7 @@
 										</div>
 										<div class="col-md-4">
 											<div id="ShowImg">
-												{if $v2.img_name != ''}
+												{if $v2.img_name}
 													{$imgName = $v2.img_name}
 													{$url_img = "$folder$imgName"}
 												{else}
@@ -72,7 +72,7 @@
 												{/if}
 												<input type="hidden" name="imgName_{$k}_{$k2}" id="imgName_{$k}_{$k2}" value="{$v2.img_name}">
 												<input type="hidden" name="imgID_{$k}_{$k2}" id="imgID_{$k}_{$k2}" value="{$v2.img_id}">
-												<img class="img-fluid" id="img_{$k}_{$k2}" src="{$url_img}" alt="">
+												<img class="img-fluid" id="img_{$k}_{$k2}" src="{$url_img}" alt="" style="max-width: 80px;">
 												<input type="file" name="fileName_{$k}_{$k2}" id="fileName_{$k}_{$k2}" onclick="AjaxUploadImg('{$k}_{$k2}');">
 											
 											</div>
@@ -115,7 +115,9 @@
 		</div>
 	</div>
 </form>
-<input type="hidden" name="json_keywords" value='{$json_keywords}'>
+
+<input type="hidden" name="id" value="{$id}">
+<input type="hidden" name="json_keywords" value='{$json_keywords|default:'{}'}'>
 
 <link href="{$arg.stylesheet}chosen/chosen.min.css" rel="stylesheet">
 <script src="{$arg.stylesheet}chosen/chosen.jquery.min.js"></script>
@@ -127,13 +129,12 @@
 	var ArrImg = [];
 	var Images = $("input[name=images]").val();
 	var Folder = $("input[name=folder]").val();
-	if (Images != '') ArrImg = Images.split(';');
+	if (Images) ArrImg = Images.split(';');
 	var id = $("input[name=id]").val();
 	var json_keywords = JSON.parse($("input[name=json_keywords]").val());
+
 	// $("select#attribute_id").change(function () {
-	// 	console.log('change attribute');
 	// 	var selected = $(this).children("option:selected").val();
-	// 	console.log(selected);
 	// });
 
 	$(window).ready(function () {
@@ -190,6 +191,8 @@
 		var img = $("#"+ tag_img);
 		var id = $("#" + tag_id);
 		var url = $("#folder_url").val();
+
+		var group_id = $("input[name=id]").val();
 		
 		if (confirm("Bạn có chắc muốn xóa hình này") == true) {
 			var Data = {};
@@ -197,6 +200,7 @@
 			Data['folder'] = url;
 			Data['imgName'] = name.val();
 			Data['imgID'] = id.val();
+			Data['groupID'] = group_id;
 
 			loading();
 			$.post('?mod=product&site=ajax_handle&id=' + id.val(), Data).done(function (e) {
@@ -226,7 +230,6 @@
 
         //     endloading();
         // });
-        console.log($key);
     }
 
 	function LoadCategory(id, level) {
@@ -255,7 +258,7 @@
 	}
 
 	function LoadImgForm() {
-		$('#ShowImg img').attr('src', arg.noimg);
+		// $('#ShowImg img').attr('src', arg.noimg);
 		$("#ShowImg small").html('No image');
 		$.each(ArrImg, function (k, item) {
 			$('#Img' + k + ' img').attr('src', Folder + item);

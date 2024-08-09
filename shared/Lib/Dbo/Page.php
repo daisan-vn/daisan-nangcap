@@ -328,10 +328,9 @@ class Page {
 
         if ($result) {
             if($result['name']!=null) $score += 5;
-            if($result['code']!=null) $score += 5;
+            if($result['code']!=null) $score += 10;
             if($result['name_short']!=null) $score += 5;
             if($result['name_global']!=null) $score += 5;
-            if($result['code']!=null) $score += 5;
             if($result['wards_id']!=0) $score += 10;
             if($result['address']!=null) $score += 5;
             if($result['date_start']!='1970-01-01'&&$result['date_start']!='0000-00-00') $score += 5;

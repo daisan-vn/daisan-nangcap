@@ -73,8 +73,8 @@ function lib_redirect($url=null){
 	exit();
 }
 
-function lib_redirect_back(){
-	echo "<script> history.go(-1); </script>";
+function lib_redirect_back($step = -1){
+	echo "<script> history.go(".$step."); </script>";
 	exit();
 }
 

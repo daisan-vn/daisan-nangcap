@@ -2,6 +2,7 @@
 .vscode/
 
 # Loại bỏ các thư mục "upload"
+site/upload/pages
 site/upload/products
 site/upload/media
 

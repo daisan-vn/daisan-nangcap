@@ -53,7 +53,7 @@ class Ads extends Pageadmin{
             if($this->profile['score_ads'] <=0) {
                 $result['error'] = 1;
                 $result['msg'] = 'Quảng cáo chỉ dành cho gian hàng Gold Supplier. Vui lòng nâng cấp lên gói trả phí để sử dụng.';
-            }else if($score_daily <= 0) {
+            }else if($result['score_daily'] <= 0) {
                 $rt['code'] = 0;
                 $rt['msg'] = 'Bạn đã hết điểm quảng cáo!';
             }

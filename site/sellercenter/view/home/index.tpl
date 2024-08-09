@@ -72,8 +72,8 @@
 			<h5>Thông tin sử dụng của gói gian hàng VIP</h5>
 			<p>Với mỗi gói sẽ có các giới hạn sử dụng hàng tháng khác nhau. Sản phẩm showcase cho phép tăng rank sản phẩm của bạn lên đáng kể, Quảng cáo giúp khách hàng tiếp cận sản phẩm của bạn dễ dàng nhất.</p>
 			<p>
-				<span class="mr-3">Sản phẩm showcase: <b>{$package.numb_showcase_used|default:0}/{$package.numb_showcase|default:0}</b></span>
-				<span>Quảng cáo sản phẩm: <b>18/{$package.numb_ads|default:0}</b></span>
+				<span class="mr-3">Sản phẩm showcase: <b>{$package.numb_showcase_used|default:0}/{$package.numb_showcase|default:0}</b></span><br/>
+				<span>Điểm quảng cáo sản phẩm: <b>{$package.numb_ads|default:0}</b></span>
 			</p>
 			{if $page.package_id gt 0}
 			{if $out.show_active_homelogo}

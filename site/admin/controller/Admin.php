@@ -175,9 +175,7 @@ class Admin {
         //close the handles
         curl_multi_remove_handle($mh, $curl);
         curl_multi_close($mh);
-//        echo "<pre>";
-//        print_r($data);
-//        echo "</pre>";die;
+
 //         all of our requests are done, we can now access the results
 //        echo curl_multi_getcontent($curl);
 //        $result = curl_exec($curl);

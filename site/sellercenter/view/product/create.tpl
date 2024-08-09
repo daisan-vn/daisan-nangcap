@@ -64,7 +64,7 @@
 	</div>
 	{else}
 	<h3>Gian hàng bạn đang đạt {$page.score} điểm hoàn thành</h3>
-	<p>Vui lòng cập nhật thông tin gian hàng đạt trên <b>70</b> điểm mới thêm được sản phẩm mới.</p>
+	<p>Vui lòng cập nhật thông tin gian hàng đạt trên <b>50</b> điểm mới thêm được sản phẩm mới.</p>
 	<p>
 		<a href="?mod=profile&site=index" class="btn btn-primary btn-sm">Cập nhật thông tin gian hàng</a>
 	</p>
@@ -103,13 +103,13 @@
 		$.post('?mod=product&site=create', Data).done(function (e) {
 			var rt = JSON.parse(e);
 			if (rt.code == 0) {
-				noticeMsg('Thông báo', rt.msg, 'error');
+				noticeMsg('Thông báo', rt.msg || 'Bạn vui lòng thử lại.	', 'error');
 				endloading();
 			} else {
 				noticeMsg('Thông báo', 'Khởi tạo sản phẩm thành công.', 'success');
 				setTimeout(function () {
 					location.href = "?mod=product&site=editdetail&id=" + rt.code;
-				}, 2000);
+				}, 500);
 			}
 		});
 	}
